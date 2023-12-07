@@ -1,13 +1,14 @@
-const { Router } = require('express')
-const CartManager = require('../cartManager.js')
+const { Router } = require('express');
+const CartManager = require('../cartManager.js');
 
-const router = Router()
+const router = Router();
 
 const firstCartManager = new CartManager();
 
 
 router.post('/', async (req, res) => {
-  await firstCartManager.createCart()
+  let newCart = req.body;
+  await firstCartManager.createCart(newCart.title,newCart.category,newCart.description,newCart.price,newCart.thumbnail,newCart.code,newCart.stock,newCart.status)
   res.status(200).send("Cart was created succesfully.")
 })
 

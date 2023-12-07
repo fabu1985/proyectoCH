@@ -31,7 +31,7 @@ class ProductManager {
       const stringProducts = JSON.stringify(this.products, null, 2);
       await fs.promises.writeFile('products.json', stringProducts);
     }else {
-      console.log("Check your data. Invalid params");
+      console.log("Check your data.Invalid params");
     }
   }
   async getProductById(id) {

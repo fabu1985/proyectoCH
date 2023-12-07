@@ -1,96 +1,57 @@
 const fs = require('fs');
 
-class ProductManager {
-  constructor() {}
-  productos = [];
+class CartManager {
+  constructor(){
+    this.carritos = [];
+  }
 
-  async getProducts() {
-    const jsonProducts = await fs.promises.readFile('products.json', 'utf-8');
-    const existantProductsArray = JSON.parse(jsonProducts);
-    return existantProductsArray;
-  }
-  async addProduct(title, category, description, price, thumbnail, code, stock, status) {
-    if(title != "" && description!= "" && category!= "" && price != null && code !== null && typeof code === 'string' && stock != null && typeof status === 'boolean'){
-      let id = 0;
-      for (let i = 0; i < this.products.length; i++) {
-        const element = this.products[i];
-        if(element.id > id) {
-          id = element.id;
-        }
-      }
-      id++;
-      status = typeof status === 'boolean' ? status : true
-      code = code;
-      const codeAlready = this.products.some((x) => (x.code == code));
-      if (codeAlready){
-        console.error("Id product it´s already existant.");
-        return;
-      }
-      const path =`./products.json`;
-      this.products.push({id:id, title, category, description, price, thumbnail, code, stock, status})
-      const stringProducts = JSON.stringify(this.products, null, 2);
-      await fs.promises.writeFile('products.json', stringProducts);
-    }else {
-      console.log("Check your data. Invalid params");
+  async createCart() {
+    const savedCarts = await fs.promises.readFile('cart.json', 'utf-8');
+    const savedCartsArray = JSON.parse(savedCarts);
+
+    const id = savedCartsArray.length + 1
+    const newCart = {
+      id: id,
+      products: []
     }
+    savedCartsArray.push(newCart)
+    const carritosString = JSON.stringify(savedCartsArray, null, 2);
+    await fs.promises.writeFile('cart.json', carritosString);
   }
-  async getProductById(id) {
-    const jsonProducts = await fs.promises.readFile('products.json', 'utf-8');
-    const existantProductsArray = JSON.parse(jsonProducts);
-    const foundedProduct = existantProductsArray.find((x) => (x.id == id));
-    return foundedProduct;
+
+  async getCartById(id) {
+    const savedCarts = await fs.promises.readFile('cart.json', 'utf-8');
+    const savedCartsArray = JSON.parse(savedCarts);
+    const foundedCart = savedCartsArray.find((x) => (x.id == id));
+    return foundedCart.products;
   }
-  async deleteProduct(id) {
-    const jsonProducts = await fs.promises.readFile('products.json', 'utf-8');
-    const existantProductsArray = JSON.parse(jsonProducts);
-    const foundedProduct = existantProductsArray.find((x) => (x.id == id));
-    if(!foundedProduct) {
-      console.log(`Product id: ${id}! wasn´t found`)
-      return;
-    }
-    const newProducts = existantProductsArray.filter(x => x.id != id);
-    this.products = newProducts;
-    const newProductsString = JSON.stringify(newProducts, null, 2)
-    await fs.promises.writeFile('products.json', newProductsString);
-  }
-  async updateProduct(id, newTitle, newCategory, newDescription, newPrice, newThumbnail, newCode, newStock, newStatus) {
-    const jsonProducts = await fs.promises.readFile('products.json', 'utf-8');
-    const existantProductsArray = JSON.parse(jsonProducts);
-    const foundedProduct = existantProductsArray.find((x) => (x.id == id));
-    if(!foundedProduct) {
-      console.log(`Product id: ${id}! wasn´t found`)
-      return;
-    }
-    const newProducts = existantProductsArray.filter(x => x.id != id);
-    if(newTitle != "" && newDescription!= "" && newPrice != null && newThumbnail!= "" && newStock != null){
-      const updateStatus = typeof newStatus === 'boolean' ? newStatus : true;
-      const productoActualizado = {
-        id:id, 
-        title: newTitle || foundedProduct.title,
-        description: newDescription || foundedProduct.description,
-        code: newCode || foundedProduct.code,
-        price: newPrice || foundedProduct.price, 
-        status: updateStatus,
-        stock: newStock || foundedProduct.stock,
-        category: newCategory || foundedProduct.category,
-        thumbnail: newThumbnail || foundedProduct.thumbnail
-      }
-      if(foundedProduct.code != newCode) {
-        const codeAlready = this.products.some((x) => (x.code == newCode));
-        if (codeAlready){
-          console.error("Id product it´s already existant.");
-          return;
-        }
-      } 
-      newProducts.push(productoActualizado);
-      this.products = newProducts;
+
+  async addProductToCart(cartId, productId) {
+  const savedCarts = await fs.promises.readFile('cart.json', 'utf-8');
+  const savedCartsArray = JSON.parse(savedCarts);
+
+  const foundedCartIndex = savedCartsArray.findIndex((x) => (x.id == cartId));
+
+  if (foundedCartIndex !== -1) {
+    const cartsCopy = [...savedCartsArray];
+    const foundedCart = { ...savedCartsArray[foundedCartIndex] };
+
+    const productIndex = foundedCart.products.findIndex((p) => parseInt(p.pid) === parseInt(productId));
+
+    if (productIndex !== -1) {
+      foundedCart.products[productIndex].quantity += 1;
     } else {
-      console.log("Entry valid data, please.");
-      return;
+      foundedCart.products.push({ pid: parseInt(productId), quantity: 1 });
     }
-    const newProductsString = JSON.stringify(newProducts, null, 2)
-    await fs.promises.writeFile('products.json', newProductsString);
+    cartsCopy[foundedCartIndex] = foundedCart;
+
+    const newList = JSON.stringify(cartsCopy, null, 2);
+    await fs.promises.writeFile('cart.json', newList);
+  }
+  else {
+    console.log(`No se encontró ningún carrito con el id: ${cartId}`)
+  }
   }
 }
 
-module.exports = ProductManager;
+module.exports = CartManager;

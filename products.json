@@ -18,12 +18,25 @@
     "stock": 22
   },
   {
-    "id": 4,
-    "title": "Nexus 6",
-    "description": "Motorola Nexus 6",
-    "price": 1000,
-    "thumbnail": "https://www.demoblaze.com/imgs/Nexus_6.jpg",
-    "code": "N6",
-    "stock": 12
+    "id": 5,
+    "title": "inventando",
+    "category": "esto es para probar nada mas el post",
+    "description": "esto es para probar nada mas el post",
+    "price": 2500,
+    "thumbnail": "",
+    "code": "Iwww6",
+    "stock": 1,
+    "status": true
+  },
+  {
+    "id": 6,
+    "title": "inventando",
+    "category": "esto es para probar nada mas el post",
+    "description": "esto es para probar nada mas el post",
+    "price": 2500,
+    "thumbnail": "",
+    "code": "E3",
+    "stock": 1,
+    "status": true
   }
 ]
