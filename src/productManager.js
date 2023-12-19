@@ -1,8 +1,10 @@
 const fs = require('fs');
+const path =`./products.json`;
 
 class ProductManager {
-  constructor() {}
-  productos = [];
+  constructor() {
+    this.path = path
+  }
 
   async getProducts() {
     const jsonProducts = await fs.promises.readFile('products.json', 'utf-8');
@@ -26,7 +28,7 @@ class ProductManager {
         console.error("Id product it´s already existant.");
         return;
       }
-      const path =`./products.json`;
+
       this.products.push({id:id, title, category, description, price, thumbnail, code, stock, status})
       const stringProducts = JSON.stringify(this.products, null, 2);
       await fs.promises.writeFile('products.json', stringProducts);
