@@ -4,8 +4,13 @@ const productsRouter = require('./routes/apis/products.router.js');
 const carritoRouter = require('./routes/apis/carts.router.js');
 const viewsRouter = require('./routes/views.router.js');
 
+
+const { uploader } = require('./helpers/uploader.js')
+const { Server } = require('socket.io')
+
 const app = express();
 const PORT = 4040;
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(__dirname+'/public'));
@@ -14,6 +19,7 @@ app.use(express.static(__dirname+'/public'));
 app.engine('hbs', handlebars.engine({
   extname: '.hbs'
 }));
+
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 
@@ -29,6 +35,34 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', carritoRouter);
 app.use('/views', viewsRouter);
 
-app.listen(PORT, () => {
+//server express http
+const serverHttp = app.listen(PORT,err => {
+  if (err) console.log(err)
   console.log(`Server is running on http://localhost:${PORT}`)
+});
+
+// server socket
+const socketServer = new Server(serverHttp);
+let arrayMensajes = [];
+
+socketServer.on('connection', socket => {
+  console.log('nuevo cliente conectado');
+  //socket.on('recibirMensajeClienteInventoYo', data => {
+    //console.log(data)
+  //});
+
+  // a este lo ven todos
+  //socket.emit('solo-para-el-actual', 'este solo lo debe recibir el socket actual')
+  //a este lo ven todos menos el actual cuando actualizo esto es para chat por eso uso broadcast
+  //socket.broadcast.emit('para-todos-menos-actual', 'este evento lo veran todos los conectados, menos el actual');
+  // lo recibben todos
+  //socketServer.emit('evento-para-todos', 'este mensaje lo reciben todos incluido el actual');
+
+  socket.emit('enviar-mensajes-cliente', arrayMensajes);
+  
+  socket.on('message', mensajes => {
+    //console.log(mensajes)
+    arrayMensajes.push({id: socket.id, message: mensajes});
+    socketServer.emit('mensaje-recibido-cliente', arrayMensajes)
+  });
 });
