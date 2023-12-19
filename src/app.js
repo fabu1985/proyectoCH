@@ -42,10 +42,11 @@ const serverHttp = app.listen(PORT,err => {
 });
 
 // server socket
-const socketServer = new Server(serverHttp);
-let arrayMensajes = [];
+const io = new Server(serverHttp);
 
-socketServer.on('connection', socket => {
+/*let arrayMensajes = [];
+
+io.on('connection', socket => {
   console.log('nuevo cliente conectado');
   //socket.on('recibirMensajeClienteInventoYo', data => {
     //console.log(data)
@@ -56,13 +57,24 @@ socketServer.on('connection', socket => {
   //a este lo ven todos menos el actual cuando actualizo esto es para chat por eso uso broadcast
   //socket.broadcast.emit('para-todos-menos-actual', 'este evento lo veran todos los conectados, menos el actual');
   // lo recibben todos
-  //socketServer.emit('evento-para-todos', 'este mensaje lo reciben todos incluido el actual');
+  //io.emit('evento-para-todos', 'este mensaje lo reciben todos incluido el actual');
 
   socket.emit('enviar-mensajes-cliente', arrayMensajes);
   
   socket.on('message', mensajes => {
     //console.log(mensajes)
     arrayMensajes.push({id: socket.id, message: mensajes});
-    socketServer.emit('mensaje-recibido-cliente', arrayMensajes)
+    io.emit('mensaje-recibido-cliente', arrayMensajes)
   });
-});
+});*/
+
+let messagesArray = []
+
+io.on('connection', socket => {
+  console.log('nuevo cliente conectado lalalala');
+
+  socket.on('message', data => {
+    messagesArray.push(data);
+    io.emit('messageLogs', messagesArray)
+  })
+})
