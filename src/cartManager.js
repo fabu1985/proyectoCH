@@ -27,7 +27,7 @@ class CartManager {
   }
 
   async addProductToCart(cartId, productId) {
-  const savedCarts = await fs.promises.readFile('cart.json', 'utf-8');
+  const savedCarts = await fs.promises.writeFile('cart.json', 'utf-8');
   const savedCartsArray = JSON.parse(savedCarts);
 
   const foundedCartIndex = savedCartsArray.findIndex((x) => (x.id == cartId));

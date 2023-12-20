@@ -38,5 +38,16 @@
     "code": "E3",
     "stock": 1,
     "status": true
+  },
+  {
+    "id": 7,
+    "title": "nuevito",
+    "category": "nuevito",
+    "description": "nuevito",
+    "price": 2222222222,
+    "thumbnail": "",
+    "code": "E14",
+    "stock": 14,
+    "status": true
   }
 ]
