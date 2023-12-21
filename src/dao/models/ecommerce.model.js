@@ -1,7 +1,7 @@
 const {Schema, model} = require('mongoose')
 
-const usersCollection = 'Usuarios';
-const UsersSchema = Schema({
+const messagesCollection = 'messages';
+const messagesSchema = Schema({
     first_name: {
         type: String,
         required: true
@@ -14,10 +14,10 @@ const UsersSchema = Schema({
     }
 });
 
-const usersModel = model(usersCollection, UsersSchema);
+const messagesModel = model(messagesCollection, messagesSchema);
 
 // productos
-const productsCollection = 'Productos';
+const productsCollection = 'products';
 const productsSchema = Schema({
     title: {
         type: String,
@@ -37,6 +37,18 @@ const productsSchema = Schema({
 });
 const productsModel = model(productsCollection, productsSchema);
 
+/// carritos
+const cartsCollection = 'carts';
+const cartsSchema = Schema({
+    id: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    quantity: String
+});
+const cartsModel = model(cartsCollection, cartsSchema);
+
 module.exports = {
-    usersModel, productsModel
+    messagesModel, productsModel, cartsModel
 }

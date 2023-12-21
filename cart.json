@@ -60,5 +60,9 @@
     "code": "E8",
     "stock": 8,
     "status": true
+  },
+  {
+    "id": 7,
+    "products": []
   }
 ]
