@@ -60,5 +60,16 @@
     "code": "E8",
     "stock": 8,
     "status": true
+  },
+  {
+    "id": 9,
+    "title": "fabu",
+    "category": "fabu",
+    "description": "fabu",
+    "price": 14,
+    "thumbnail": "",
+    "code": "14",
+    "stock": 14,
+    "status": true
   }
 ]

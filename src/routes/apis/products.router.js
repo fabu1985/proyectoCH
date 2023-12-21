@@ -1,58 +1,69 @@
 const { Router } = require('express')
 const ProductManager = require('../../dao/productManager.js')
+const { productsModel } = require('../../dao/models/ecommerce.model')
+const router = Router();
 
-const router = Router()
-
-const firstManager = new ProductManager();
-async function initializeProducts() {
-  const products = await firstManager.getProducts()
-  firstManager.products = products;
-}
-
-initializeProducts()
-
-router.get('/', async (req, res) => {
-  const products = await firstManager.getProducts();
-  const limit = parseInt(req.query.limit);
-  if(isNaN(limit)) {
-    res.json(products);
-  }else {
-    const productsLimit = products.slice(0, limit);
-    res.status(200).json(productsLimit)
+router.get('/', async (req, res) =>{
+  // sinc o async ?
+  try {
+      const allProducts = await productsModel.find({})
+      res.send(`Product wiht id: ${allProducts}`)
+    } catch (error) {
+      console.log(error)
   }
 })
 
-router.get('/:pid', async (req, res) => {
-  const productId = req.params.pid;
-  const foundedProduct = await firstManager.getProductById(productId);
-  if(foundedProduct) {
-    res.status(200).json(foundedProduct);
-  }
-  else{
-    res.status(404).send('Missed product.')
+router.get('/:pid', async (req, res) =>{
+  // sinc o async ?
+  try {
+      const { pid } = req.params;
+      const foundedProduct = await productsModel.find({_id: pid})
+      res.send(`Product wiht id: ${foundedProduct}`)
+    } catch (error) {
+      console.log(error)
   }
 })
 
-router.post('/', async (req, res) => {
-  let newProduct = req.body;
-  await firstManager.addProduct(newProduct.title,newProduct.category,newProduct.description,newProduct.price,newProduct.thumbnail,newProduct.code,newProduct.stock,newProduct.status)
-  res.status(200).send("Added product succesfully...")
-})
+router.post('/', async (req, res) =>{
+  try {
+      const {title, category, description, price, thumbnail, code, stock, status} = req.body
+      // validación
+      const result = await productsModel.create({
+        title, category, description, price, thumbnail, code, stock, status
+      })
+      console.log(title, category, description, price, thumbnail, code, stock, status)
+      res.status(200).send({ 
+          status: 'success',
+          payload: result        
+      })
+  } catch (error) {
+    res.status(404).send('Check your data')
+  }
+});
 
 router.put('/:pid', async (req,res) => {
-  const productId = parseInt(req.params.pid);
-  let updateData = req.body;
   try {
-    await firstManager.updateProduct(productId, updateData.newTitle, updateData.newCategory, updateData.newDescription, updateData.newPrice, updateData.newThumbnail, updateData.newCode, updateData.newStock, updateData.newStatus);
-  } catch(error) {
-    res.status(404).send('Product couldn´t be updated')
+    const { pid } = req.params;
+    const userToReplace = req.body;
+    const result = await productsModel.updateOne({_id: pid}, userToReplace);
+    res.status(200).send({ 
+      status: 'success',
+      payload: result 
+  })
+  } catch (error) {
+    res.status(404).send('Product couldn´t be updated');
   }
-})
+});
 
 router.delete('/:pid', async (req, res) => {
-  const productId = req.params.pid;
-  await firstManager.deleteProduct(productId)
-  res.status(200).send(`Product wiht id: ${productId} was deleted succesfully`)
-})
+  // sinc o async ?
+  try {
+    const { pid } = req.params;
+    await usersModel.deleteOne({_id: pid})
+    res.send(`Deleted product wiht id: ${pid}`)
+  } catch (error) {
+  res.status(404).send('Product couldn´t be deleted');
+}
+});
 
 module.exports = router;
