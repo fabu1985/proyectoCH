@@ -2,14 +2,22 @@ const express = require('express');
 const handlebars = require ('express-handlebars');
 const productsRouter = require('./routes/apis/products.router.js');
 const carritoRouter = require('./routes/apis/carts.router.js');
+const userRouter = require('./routes/apis/users.router.js');
 const viewsRouter = require('./routes/views.router.js');
-
-
 const { uploader } = require('./helpers/uploader.js')
-const { Server } = require('socket.io')
+const { Server } = require('socket.io');
+//IMPORTAR moongose
+const { connect } = require('mongoose');
 
 const app = express();
 const PORT = process.env.PORT || 4040;
+//conectar a la bd de mongo
+const connectDb = async () => {
+  //al invocar, cuando levantos se crea la base de datos sola desde la consola la puedo ver
+  await connect('mongodb+srv://fabianadiazp:FABU1985@cluster0.qn3ysof.mongodb.net/ecommerce?retryWrites=true&w=majority');
+  console.log('base de datos conectada')
+}
+connectDb()
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -33,6 +41,7 @@ app.get('/views', (req, res) => {
 
 app.use('/api/products', productsRouter);
 app.use('/api/carts', carritoRouter);
+app.use('/api/users', userRouter);
 app.use('/views', viewsRouter);
 
 //server express http

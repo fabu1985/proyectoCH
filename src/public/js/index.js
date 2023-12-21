@@ -79,7 +79,7 @@ socket.on('messageLogs', data => {
     let messages = ''
     data.forEach(elementMensajes => {
         messages += `
-        ${elementMensajes.user} dice; ${elementMensajes.message}<br>
+        ${elementMensajes.user} dice: ${elementMensajes.message}<br>
         `
     });
     messageLogs.innerHTML = messages;
