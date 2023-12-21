@@ -40,12 +40,7 @@ const productsModel = model(productsCollection, productsSchema);
 /// carritos
 const cartsCollection = 'carts';
 const cartsSchema = Schema({
-    id: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    quantity: String
+    products: String
 });
 const cartsModel = model(cartsCollection, cartsSchema);
 

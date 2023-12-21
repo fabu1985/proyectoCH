@@ -1,33 +1,35 @@
 const { Router } = require('express');
-const CartManager = require('../../dao/cartManager.js');
-
+const CartManager = require('../../dao/cartManager.js')
+const { cartsModel } = require('../../dao/models/ecommerce.model')
 const router = Router();
 
-const firstCartManager = new CartManager();
-
-
-router.post('/', async (req, res) => {
-  let newCart = req.body;
-  await firstCartManager.createCart(newCart.title,newCart.category,newCart.description,newCart.price,newCart.thumbnail,newCart.code,newCart.stock,newCart.status)
-  res.status(200).send("Cart was created succesfully.")
-})
-
-router.get('/:cid', async (req, res) => {
-  const cartId = req.params.cid;
-  const carritoEncontrado = await firstCartManager.getCartById(cartId);
-  if(carritoEncontrado) {
-    res.status(200).json(carritoEncontrado);
+router.post('/', async (req, res) =>{
+  try {
+      const {products} = req.body
+      // validación
+      const result = await cartsModel.create({
+        products
+      })
+      console.log(products)
+      res.status(200).send({ 
+          status: 'Cart was created succesfully.',
+          payload: result        
+      })
+  } catch (error) {
+    res.status(404).send('Check your data')
   }
-  else{
-    res.status(404).send('Cart didn´t found.')
-  }
-})
+});
 
-router.post('/:cid/product/:pid', async (req, res) => {
-  const cartId = req.params.cid;
-  const productId = req.params.pid;
-  await firstCartManager.addProductToCart(cartId, productId);
-  res.status(200).send('The product was saved on cart succesfully.')
+
+router.get('/:cid', async (req, res) =>{
+  // sinc o async ?
+  try {
+      const { cid } = req.params;
+      const foundedCart = await cartsModel.find({_id: cid})
+      res.send(`cart wiht id: ${foundedCart}`)
+    } catch (error) {
+      console.log(error)
+  }
 })
 
 module.exports = router;
