@@ -1,9 +1,10 @@
 const express = require('express');
+const multer = require('multer');
 const handlebars = require ('express-handlebars');
 const productsRouter = require('./routes/apis/products.router.js');
 const carritoRouter = require('./routes/apis/carts.router.js');
 const viewsRouter = require('./routes/views.router.js');
-const { uploader } = require('./helpers/uploader.js')
+const { uploader } = require('./utils/uploader.js')
 const { Server } = require('socket.io');
 //IMPORTAR moongose
 const { connect } = require('mongoose');
@@ -18,6 +19,10 @@ const connectDb = async () => {
 }
 connectDb()
 
+app.post('/uploader', uploader.single('myFile'), (req,res)=>{
+  res.send('Imagen subida')
+});
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(__dirname+'/public'));
@@ -26,7 +31,6 @@ app.use(express.static(__dirname+'/public'));
 app.engine('hbs', handlebars.engine({
   extname: '.hbs'
 }));
-
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 
@@ -46,7 +50,7 @@ const io = new Server(serverHttp);
 let messagesArray = []
 
 io.on('connection', socket => {
-  console.log('nuevo cliente conectado lalalala');
+  console.log('nuevo cliente conectado');
 
   socket.on('message', data => {
     messagesArray.push(data);

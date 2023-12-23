@@ -10,12 +10,14 @@ const storage = multer.diskStorage({
     }
 });
 
-/*
-/// otra opciones para importar 
+const uploader = multer ({
+    storage,
+    onError: function (error, next) {
+        console.log(error);
+        next()
+    }
+});
+
 module.exports = {
     uploader
-}*/
-
-exports.uploader = multer ({
-    storage
-});
+}
