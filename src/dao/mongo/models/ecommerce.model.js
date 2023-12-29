@@ -37,6 +37,8 @@ const cartsSchema = new Schema({
 cartsSchema.pre('findOne', function () {
     this.populate('products.product')
 });
+cartsSchema.plugin(mongoosePaginate);
+
 const cartsModel = model('carts', cartsSchema)
 
 module.exports = {

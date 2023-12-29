@@ -4,8 +4,7 @@ const router = Router();
 
 router.get('/', async (req, res) =>{
   try {
-    // const users = await usersModel.find({}).limit(50) // 5000 -> 100
-    const products = await productsModel.paginate({}, {limit: 10, page: 1, lean: true}) 
+    const products = await productsModel.paginate({}, {limit: 10, page: 1, sort: {price: 1}, lean: true}) 
     res.send(products)
     
 } catch (error) {
@@ -59,7 +58,7 @@ router.delete('/:pid', async (req, res) => {
   // sinc o async ?
   try {
     const { pid } = req.params;
-    await usersModel.deleteOne({_id: pid})
+    await productsModel.deleteOne({_id: pid})
     res.send(`Deleted product wiht id: ${pid}`)
   } catch (error) {
   res.status(404).send('Product couldn´t be deleted');

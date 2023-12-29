@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { cartsModel } = require('../../dao/mongo/models/ecommerce.model.js')
+const { cartsModel, productsModel } = require('../../dao/mongo/models/ecommerce.model.js')
 const router = Router();
 
 router
@@ -23,37 +23,30 @@ router
             status: 'success',
             payload: result
         })
-    })
+    });
 
-module.exports = router;
-/* funcionaban ok antes de lo de mongo
-router.post('/', async (req, res) =>{
-  try {
-      const {products} = req.body
-      // validación
-      const result = await cartsModel.create({
-        products
+    router.delete('/:cid', async (req, res) => {
+      try {
+        const { cid } = req.params;
+        await cartsModel.deleteOne({_id: cid})
+        res.send(`Deleted product wiht id: ${cid}`)
+      } catch (error) {
+      res.status(404).send('Cart couldn´t be deleted');
+    }
+    });
+
+    router.put('/:cid', async (req,res) => {
+      try {
+        const { cid } = req.params;
+        const productsToReplace = req.body;
+        const result = await cartsModel.updateOne({_id: cid}, productsToReplace);
+        res.status(200).send({ 
+          status: 'success',
+          payload: result 
       })
-      console.log(products)
-      res.status(200).send({ 
-          status: 'Cart was created succesfully.',
-          payload: result        
-      })
-  } catch (error) {
-    res.status(404).send('Check your data')
-  }
-});
-
-
-router.get('/:cid', async (req, res) =>{
-  // sinc o async ?
-  try {
-      const { cid } = req.params;
-      const foundedCart = await cartsModel.find({_id: cid})
-      res.send(`cart wiht id: ${foundedCart}`)
-    } catch (error) {
-      console.log(error)
-  }
-})*/
+      } catch (error) {
+        res.status(404).send('Product couldn´t be updated');
+      }
+    });
 
 module.exports = router;

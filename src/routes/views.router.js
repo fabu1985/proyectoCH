@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
   });
 
   router.get('/carts', async (req, res) => {
-    const { numPage, limit=2 } = req.query
+    const { numPage=1, limit=2 } = req.query
     const {
         docs,
         hasPrevPage,
@@ -31,7 +31,7 @@ router.get('/', (req, res) => {
   });
 
 router.get('/products', async (req, res) => {
-    const { numPage, limit=20 } = req.query
+    const { numPage=1, limit=10, sort } = req.query
     const {
         docs,
         hasPrevPage,
@@ -39,7 +39,7 @@ router.get('/products', async (req, res) => {
         prevPage,
         nextPage,
         page
-    } = await productsModel.paginate({}, {limit, page: numPage, lean: true})
+    } = await productsModel.paginate({}, {limit, page: numPage, sort, lean: true})
     // console.log(result)
     res.render('products', {
         products: docs,
