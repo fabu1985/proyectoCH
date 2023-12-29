@@ -1,17 +1,12 @@
-const {Schema, model} = require('mongoose')
-
+const {Schema, model} = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 const messagesCollection = 'messages';
 const messagesSchema = Schema({
-    first_name: {
+    user: {
         type: String,
         required: true
     },
-    last_name: String,
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    }
+    message: String
 });
 
 const messagesModel = model(messagesCollection, messagesSchema);
@@ -35,15 +30,51 @@ const productsSchema = Schema({
     stock: String,
     status: Boolean
 });
+
+productsSchema.plugin(mongoosePaginate);
 const productsModel = model(productsCollection, productsSchema);
 
 /// carritos
+/*
+//este anda bien
 const cartsCollection = 'carts';
 const cartsSchema = Schema({
     products: String
 });
-const cartsModel = model(cartsCollection, cartsSchema);
+const cartsModel = model(cartsCollection, cartsSchema);*/
+
+
+// del profe en clases
+const cartsSchema = new Schema({
+    products: {
+        type: [{
+            product: {
+                type: Schema.Types.ObjectId,
+                ref: 'products'
+            }
+        }]
+    }
+});
+cartsSchema.pre('findOne', function () {
+    this.populate('products.product')
+});
+const cartsModel = model('carts', cartsSchema)
+//// hasta aca del profe en clsaes para carts
+const usersCollection = 'Usuarios'
+const UsersSchema = Schema({
+    first_name: {
+        type: String,
+        required: true
+    },
+    last_name: String,
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    }
+})
+const usersModel = model(usersCollection, UsersSchema)
 
 module.exports = {
-    messagesModel, productsModel, cartsModel
+    messagesModel, productsModel, cartsModel, usersModel
 }

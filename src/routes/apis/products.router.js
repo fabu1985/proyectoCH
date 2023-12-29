@@ -4,17 +4,17 @@ const { productsModel } = require('../../dao/models/ecommerce.model')
 const router = Router();
 
 router.get('/', async (req, res) =>{
-  // sinc o async ?
   try {
-      const allProducts = await productsModel.find({})
-      res.send(`Product wiht id: ${allProducts}`)
-    } catch (error) {
-      console.log(error)
-  }
+    // const users = await usersModel.find({}).limit(50) // 5000 -> 100
+    const products = await productsModel.paginate({}, {limit: 10, page: 1, lean: true}) 
+    res.send(products)
+    
+} catch (error) {
+    console.log(error)
+}
 })
 
 router.get('/:pid', async (req, res) =>{
-  // sinc o async ?
   try {
       const { pid } = req.params;
       const foundedProduct = await productsModel.find({_id: pid})
@@ -27,14 +27,13 @@ router.get('/:pid', async (req, res) =>{
 router.post('/', async (req, res) =>{
   try {
       const {title, category, description, price, thumbnail, code, stock, status} = req.body
-      // validación
-      const result = await productsModel.create({
+      const newProduct = await productsModel.create({
         title, category, description, price, thumbnail, code, stock, status
       })
-      console.log(title, category, description, price, thumbnail, code, stock, status)
+      console.log(title, category, description, price, thumbnail, code, stock, status);
       res.status(200).send({ 
           status: 'success',
-          payload: result        
+          payload: newProduct        
       })
   } catch (error) {
     res.status(404).send('Check your data')
@@ -56,7 +55,6 @@ router.put('/:pid', async (req,res) => {
 });
 
 router.delete('/:pid', async (req, res) => {
-  // sinc o async ?
   try {
     const { pid } = req.params;
     await usersModel.deleteOne({_id: pid})

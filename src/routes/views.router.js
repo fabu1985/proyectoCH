@@ -1,4 +1,5 @@
-const { Router } = require('express')
+const { Router } = require('express');
+const { productsModel } = require('../dao/models/ecommerce.model');
 const router = Router()
 
 const productMock = [
@@ -16,18 +17,25 @@ router.get('/', (req, res) => {
     })
   });
 
-  router.get('/products', (req, res) => {
-    const userMock = {
-        title: 'Fabu',
-        name: 'Diaz Posleman',
-        role: 'admin'
-    }
+  router.get('/products', async (req, res) => {
+    const { numPage, limit=20 } = req.query
+    const {
+        docs,
+        hasPrevPage,
+        hasNextPage,
+        prevPage,
+        nextPage,
+        page
+    } = await productsModel.paginate({}, {limit, page: numPage, lean: true})
+    // console.log(result)
     res.render('products', {
-        title: userMock.title,
-        name: userMock.name,
-        isAdmin: userMock.role == 'admin',
-        products: productMock
+        products: docs,
+        hasNextPage,
+        hasPrevPage,
+        prevPage,
+        nextPage,
+        page
     })
-  })
+});
 
 module.exports = router
