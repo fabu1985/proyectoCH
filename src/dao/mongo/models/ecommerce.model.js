@@ -58,6 +58,8 @@ const cartsSchema = new Schema({
 cartsSchema.pre('findOne', function () {
     this.populate('products.product')
 });
+cartsSchema.plugin(mongoosePaginate);
+
 const cartsModel = model('carts', cartsSchema)
 //// hasta aca del profe en clsaes para carts
 const usersCollection = 'Usuarios'

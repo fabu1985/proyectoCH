@@ -17,7 +17,15 @@
     {{#each products}}
     <li>
         <strong>Nombre: </strong>{{this.title}}
+        
+        <strong>Categoría: </strong>{{this.category}}
+        <strong>Descripción: </strong>{{this.description}}
+        <strong>Imagen: </strong>{{this.thumbnail}}
+        <strong>Codigo: </strong>{{this.code}}
+        <strong>Stock: </strong>{{this.stock}}
+        <strong>Estado: </strong>{{this.status}}
     </li>
+    <button onclick="agregarAlCarrito('{{this.code}}')">Agregar al carrito</button>
     {{/each}}
 </div>
 <div class="text-center">
