@@ -23,12 +23,6 @@ const productsSchema = Schema({
 
 productsSchema.plugin(mongoosePaginate);
 const productsModel = model(productsCollection, productsSchema);
-/// este era el que yo hice y no andaba bien
-/*const cartsCollection = 'carts';
-const cartsSchema = Schema({
-    products: String
-});
-const cartsModel = model(cartsCollection, cartsSchema);*/
 
 const cartsSchema = new Schema({
     products: {
