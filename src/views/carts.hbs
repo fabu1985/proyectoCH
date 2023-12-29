@@ -1,0 +1,17 @@
+<h1>Lista de Carritos</h1>
+
+<div>
+    {{#each carts}}
+    <li>
+        <strong>Nombre: </strong>{{this.title}}
+    </li>
+    {{/each}}
+</div>
+<div class="text-center">
+    {{#if hasPrevPage}}
+        <a href="/views/carts?numPage={{prevPage}}" class="btn btn-outline-dark">Anterior</a>
+    {{/if}}
+    {{#if hasNextPage}}
+        <a href="/views/carts?numPage={{nextPage}}" class="btn btn-outline-dark">Siguiente</a>
+    {{/if}}
+</div>

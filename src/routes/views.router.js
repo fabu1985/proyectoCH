@@ -1,14 +1,7 @@
 const { Router } = require('express');
 const { productsModel } = require('../dao/mongo/models/ecommerce.model');
+const { cartsModel } = require('../dao/mongo/models/ecommerce.model');
 const router = Router();
-
-const productMock = [
-    {
-        id: 1, title: 'Product1', price: 22323, stock: 2, description: 'alguna descripcion',
-        id: 2, title: 'Product2', price: 22323, stock: 4, description: 'alguna descripcion2',
-        id: 3, title: 'Product3', price: 22323, stock: 9, description: 'alguna descripcion3'
-    }
-]
 
 router.get('/', (req, res) => {
     res.render('index', {
@@ -17,7 +10,27 @@ router.get('/', (req, res) => {
     })
   });
 
-  router.get('/products', async (req, res) => {
+  router.get('/carts', async (req, res) => {
+    const { numPage, limit=2 } = req.query
+    const {
+        docs,
+        hasPrevPage,
+        hasNextPage,
+        prevPage,
+        nextPage,
+        page
+    } = await productsModel.paginate({}, {limit, page: numPage, lean: true})
+    res.render('carts', {
+        carts: docs,
+        hasNextPage,
+        hasPrevPage,
+        prevPage,
+        nextPage,
+        page
+    })
+  });
+
+router.get('/products', async (req, res) => {
     const { numPage, limit=20 } = req.query
     const {
         docs,
