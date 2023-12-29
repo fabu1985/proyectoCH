@@ -1,8 +1,33 @@
 const { Router } = require('express');
 const CartManager = require('../../dao/cartManager.js')
-const { cartsModel } = require('../../dao/models/ecommerce.model')
+const { cartsModel } = require('../../dao/mongo/models/ecommerce.model.js')
 const router = Router();
 
+router
+    .get('/:cid', async (req,res)=>{
+        const {cid} = req.params
+
+        const cart = await cartsModel.findOne({_id: cid }) 
+
+        res.send({
+            status: 'success',
+            payload: cart        
+        })
+    })
+    .post('/', async (req,res)=>{
+        const newCart = req.body
+
+        const result = await cartsModel.create(newCart)
+
+        
+        res.send({
+            status: 'success',
+            payload: result
+        })
+    })
+
+module.exports = router;
+/* funcionaban ok antes de lo de mongo
 router.post('/', async (req, res) =>{
   try {
       const {products} = req.body
@@ -30,6 +55,6 @@ router.get('/:cid', async (req, res) =>{
     } catch (error) {
       console.log(error)
   }
-})
+})*/
 
 module.exports = router;

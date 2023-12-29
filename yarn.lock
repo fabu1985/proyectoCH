@@ -1091,6 +1091,7 @@ __metadata:
     express: "npm:^4.18.2"
     express-handlebars: "npm:^6.0.7"
     mongoose: "npm:^8.0.3"
+    mongoose-paginate-v2: "npm:^1.7.4"
     multer: "npm:^1.4.5-lts.1"
     nodemon: "npm:^3.0.1"
     socket.io: "npm:^4.7.2"
@@ -1366,6 +1367,13 @@ __metadata:
     socks:
       optional: true
   checksum: aa806b7a01989310d1a713f0f3b409af98a9e8d374391d6d4319053a9e5cf982411e7b8514394eb33919d5f0305daee010720e0fc7259686edac038530e86662
+  languageName: node
+  linkType: hard
+
+"mongoose-paginate-v2@npm:^1.7.4":
+  version: 1.7.31
+  resolution: "mongoose-paginate-v2@npm:1.7.31"
+  checksum: 0ff85e5d3c19ecb7e5b22fa812b971828b4e623e7d1fb343a44061bc544039d67ca928ef64983f5eaea3edfa67ca9cbccd109fa21ca6aa3710c93079707945bc
   languageName: node
   linkType: hard
 

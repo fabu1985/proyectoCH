@@ -1,16 +1,17 @@
+<h1>Bienvenidos a Lista de Productos</h1>
+
 <div>
-    <h1>Hola {{ name }}</h1>
-    {{#if isAdmin}}
-        {{#each products}}
-            <div>
-                <p>Nombre del Producto {{ this.name }}</p>
-                <p>Precio del Producto {{ this.price }}</p>
-                <p>Stock del Producto {{ this.stock }}</p>
-                <p>Descripcion del Producto {{ this.description }}</p>
-                <hr>
-            </div>
-        {{/each}}
-    {{ else }}
-        <h2>Ud no es Admin no puede ver los productos</h2>
+    {{#each products}}
+    <li>
+        <strong>Nombre: </strong>{{this.title}}
+    </li>
+    {{/each}}
+</div>
+<div class="text-center">
+    {{#if hasPrevPage}}
+        <a href="/views/products?numPage={{prevPage}}" class="btn btn-outline-dark">Anterior</a>
+    {{/if}}
+    {{#if hasNextPage}}
+        <a href="/views/products?numPage={{nextPage}}" class="btn btn-outline-dark">Siguiente</a>
     {{/if}}
 </div>

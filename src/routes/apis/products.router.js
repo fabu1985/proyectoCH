@@ -1,17 +1,18 @@
 const { Router } = require('express')
 const ProductManager = require('../../dao/productManager.js')
-const { productsModel } = require('../../dao/models/ecommerce.model')
+const { productsModel } = require('../../dao/mongo/models/ecommerce.model.js')
 const router = Router();
 
 router.get('/', async (req, res) =>{
-  // sinc o async ?
   try {
-      const allProducts = await productsModel.find({})
-      res.send(`Product wiht id: ${allProducts}`)
-    } catch (error) {
-      console.log(error)
-  }
-})
+    // const users = await usersModel.find({}).limit(50) // 5000 -> 100
+    const products = await productsModel.paginate({}, {limit: 10, page: 1, lean: true}) 
+    res.send(products)
+    
+} catch (error) {
+    console.log(error)
+}
+});
 
 router.get('/:pid', async (req, res) =>{
   // sinc o async ?
