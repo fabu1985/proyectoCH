@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const ProductManager = require('../../dao/productManager.js')
-const { productsModel } = require('../../dao/models/ecommerce.model')
+const { productsModel } = require('../../dao/mongo/models/ecommerce.model.js')
 const router = Router();
 
 router.get('/', async (req, res) =>{
@@ -55,9 +55,10 @@ router.put('/:pid', async (req,res) => {
 });
 
 router.delete('/:pid', async (req, res) => {
+  // sinc o async ?
   try {
     const { pid } = req.params;
-    await usersModel.deleteOne({_id: pid})
+    await productsModel.deleteOne({_id: pid})
     res.send(`Deleted product wiht id: ${pid}`)
   } catch (error) {
   res.status(404).send('Product couldn´t be deleted');
