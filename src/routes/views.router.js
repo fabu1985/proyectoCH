@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { productsModel } = require('../dao/models/ecommerce.model');
+const { productsModel } = require('../dao/mongo/models/ecommerce.model');
 const router = Router()
 
 const productMock = [
