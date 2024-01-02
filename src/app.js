@@ -4,7 +4,6 @@ const handlebars = require ('express-handlebars');
 const productsRouter = require('./routes/apis/products.router.js');
 const carritoRouter = require('./routes/apis/carts.router.js');
 const viewsRouter = require('./routes/views.router.js');
-const userRouter = require('./routes/apis/users.router.js')
 const ordersRouter = require('./routes/apis/orders.router.js')
 /////const chatRouter = require('./routes/chat.router.js');
 const { uploader } = require('./utils/uploader.js')
@@ -36,12 +35,8 @@ app.engine('hbs', handlebars.engine({
 }));
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
-////app.set('chat', __dirname + '/chat');
-
 app.use('/api/products', productsRouter);
 app.use('/api/carts', carritoRouter);
-app.use('/api/users', userRouter)
-////app.use('/chat', chatRouter);
 app.use('/views', viewsRouter);
 app.use('/api/orders', ordersRouter);
 
