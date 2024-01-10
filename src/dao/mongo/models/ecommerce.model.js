@@ -61,7 +61,7 @@ cartsSchema.pre('findOne', function () {
 const cartsModel = model('carts', cartsSchema)
 //// hasta aca del profe en clsaes para carts
 const usersCollection = 'Usuarios'
-const UsersSchema = Schema({
+const usersSchema = Schema({
     first_name: {
         type: String,
         required: true
@@ -72,8 +72,9 @@ const UsersSchema = Schema({
         required: true,
         unique: true
     }
-})
-const usersModel = model(usersCollection, UsersSchema)
+});
+usersSchema.plugin(mongoosePaginate)
+const usersModel = model(usersCollection, usersSchema)
 
 module.exports = {
     messagesModel, productsModel, cartsModel, usersModel

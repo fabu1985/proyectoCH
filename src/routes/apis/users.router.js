@@ -1,14 +1,15 @@
 const { Router } = require('express')
 const { usersModel } = require('../../dao/mongo/models/ecommerce.model')
+const { authentication } = require('../../middlewares/auth.middleware')
 
 const router = Router()
 //
 
 
-router.get('/', async (req, res) =>{
+router.get('/', authentication, async (req, res) =>{
     // sinc o async ?
     try {
-        const users = await usersModel.find({first_name: 'Celia'}).explain('executionStats') // no tengo conección
+        const users = await usersModel.find({})
         res.send(users)
         
     } catch (error) {
@@ -62,4 +63,3 @@ router.delete('/:uid', async  (req, res)=> {
 })
 
 module.exports = router
-
