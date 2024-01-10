@@ -17,6 +17,7 @@ module.exports = router; */
 
 const {Router } = require('express');
 const { authentication } = require('../../middlewares/auth.middleware');
+const { usersModel } = require('../../dao/mongo/models/ecommerce.model');
 
 const router = Router();
 
@@ -25,31 +26,72 @@ router.get('/', (req, res)=>{
     if (req.session.counter) {
         req.session.counter ++
 
-        res.send(`Se visatado esta página ${req.session.counter}`)
+        res.send(`Se ha visatado esta página ${req.session.counter}`)
     }else{
         req.session.counter = 1
         req.session.firts_name = 'fede' 
-        res.send('Bienvenido a ecommerce coder')
+        res.send('Bienvenido a sessions')
     }
     // res.send('sessions')
 });
 
-router.get('/login', (req, res)=>{
-    const {username , password } = req.query
-    // simulando consulta a la base de datos
-    if (username !== 'fede' || password !== '123') {
-        return res.send('login failed')
-    }
-    
-    /*req.session.username  = username
-    req.session.admin = true */
-    req.session.user = {
-      username,
-      admin: true
-    }
+router.post('/register', async (req, res)=>{
+  const { first_name, last_name, email , password } = req.body
+  
 
-    res.send('login success')
+  if (first_name ==='' || password === "" || email === '' ) {
+      return res.send('completar datos requeridos')
+  }
+
+  const userFound = await usersModel.findOne({email})
+  if (userFound) {
+      return res.send({status: 'error', error: 'existant user'})
+  }
+  const newUser = {
+      first_name,
+      last_name,
+      email,
+      password
+  }
+  const result = await usersModel.create(newUser)
+  
+  res.send({
+      status: 'success',
+      payload: {
+          first_name: result.first_name,
+          last_name: result.last_name,
+          email: result.email,
+          _id: result._id
+      }
+  })
 });
+
+router.post('/login', async (req, res)=>{
+  const {email , password } = req.body
+  // simulando consulta a la base de datos
+  if (email === '' || password === '') {
+      return res.send('todos los campos son obligatoris')
+  }
+  
+  const user = await usersModel.findOne({email})
+  if (!user) {
+      return res.send('email inexistente')
+  }
+
+  // validar si es el password
+  if (password !== user.password) {
+      return res.send('contraseña erronea')
+  }
+
+  req.session.user = {
+      user: user._id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      admin: true
+  }
+  res.redirect('/')
+});
+
 
 router.get('/current', authentication, (req, res) => {
     res.send('info sensible que solo puede ver el admin')
@@ -63,11 +105,6 @@ router.get('/logout', (req, res)=>{
 });
 
 // cookies
-router.get('/setcookies', (req, res) => {
-    // cookie par key value 
-    res.cookie('coderCookie', 'Esta es una cookie muy poderosa.', {maxAge: 100000000*24}).send('cookies')
-});
-
 router.get('/setcookies', (req, res) => {
     // cookie par key value 
     res.cookie('signedCookie', 'Esta es una cookie muy poderosa.', {maxAge: 100000000*24, signed:true}).send('cookies')

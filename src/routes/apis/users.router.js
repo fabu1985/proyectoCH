@@ -4,7 +4,25 @@ const { authentication } = require('../../middlewares/auth.middleware')
 
 const router = Router()
 //
+router.get('/register', async (req, res) =>{
+    // sinc o async ?
+    try {
+        res.render('register')
+        
+    } catch (error) {
+        console.log(error)
+    }
+});
 
+router.get('/login', async (req, res) =>{
+    // sinc o async ?
+    try {
+        res.render('login')
+        
+    } catch (error) {
+        console.log(error)
+    }
+});
 
 router.get('/', authentication, async (req, res) =>{
     // sinc o async ?
@@ -15,7 +33,7 @@ router.get('/', authentication, async (req, res) =>{
     } catch (error) {
         console.log(error)
     }
-})
+});
 
 
 // POST localhost:8080  /api/users /
@@ -37,7 +55,7 @@ router.post('/', async (req, res) =>{
         console.log(error)
     }
     
-})
+});
 // PUT localhost:8080  /api/users /:uid
 router.put('/:uid',  async (req, res) =>{
 

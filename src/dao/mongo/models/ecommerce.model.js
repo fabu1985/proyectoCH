@@ -71,6 +71,9 @@ const usersSchema = Schema({
         type: String,
         required: true,
         unique: true
+    },
+    password: {
+        type: String
     }
 });
 usersSchema.plugin(mongoosePaginate)
