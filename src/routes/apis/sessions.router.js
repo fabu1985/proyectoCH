@@ -65,7 +65,7 @@ router.post('/login', async (req, res)=>{
   const {email , password } = req.body
   // simulando consulta a la base de datos
   if (email === '' || password === '') {
-      return res.send('todos los campos son obligatoris')
+      return res.send('todos los campos son obligatorios')
   }
   const user = await usersModel.findOne({email})
   if (!user) {

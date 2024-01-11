@@ -1,9 +1,11 @@
 const { Router } = require('express')
 const ProductManager = require('../../dao/productManager.js')
 const { productsModel } = require('../../dao/mongo/models/ecommerce.model.js')
-const router = Router();
+const { authentication } = require('../../middlewares/auth.middleware')
+const router = Router()
 
-router.get('/', async (req, res) =>{
+
+router.get('/', authentication, async (req, res) =>{
   try {
     const products = await productsModel.paginate({}, {limit: 10, page: 1, lean: true}) 
     res.send(products)
@@ -12,7 +14,7 @@ router.get('/', async (req, res) =>{
 }
 })
 
-router.get('/:pid', async (req, res) =>{
+router.get('/:pid', authentication, async (req, res) =>{
   try {
       const { pid } = req.params;
       const foundedProduct = await productsModel.find({_id: pid})
@@ -22,7 +24,7 @@ router.get('/:pid', async (req, res) =>{
   }
 })
 
-router.post('/', async (req, res) =>{
+router.post('/', authentication, async (req, res) =>{
   try {
       const {title, category, description, price, thumbnail, code, stock, status} = req.body
       const newProduct = await productsModel.create({
@@ -38,7 +40,7 @@ router.post('/', async (req, res) =>{
   }
 });
 
-router.put('/:pid', async (req,res) => {
+router.put('/:pid', authentication, async (req,res) => {
   try {
     const { pid } = req.params;
     const userToReplace = req.body;
@@ -52,7 +54,7 @@ router.put('/:pid', async (req,res) => {
   }
 });
 
-router.delete('/:pid', async (req, res) => {
+router.delete('/:pid', authentication, async (req, res) => {
   // sinc o async ?
   try {
     const { pid } = req.params;

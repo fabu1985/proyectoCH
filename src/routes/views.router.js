@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { productsModel, usersModel } = require('../dao/mongo/models/ecommerce.model');
+const { authentication } = require('../middlewares/auth.middleware')
 const router = Router()
 
 const productMock = [
@@ -17,7 +18,7 @@ router.get('/', (req, res) => {
     })
   });
 
-  router.get('/products', async (req, res) => {
+  router.get('/products', authentication, async (req, res) => {
     const { numPage, limit=20 } = req.query
     const {
         docs,

@@ -1,9 +1,10 @@
 const { Router } = require('express');
 const { cartsModel, productsModel } = require('../../dao/mongo/models/ecommerce.model.js')
+const { authentication } = require('../../middlewares/auth.middleware')
 const router = Router();
 
 router
-    .get('/:cid', async (req,res)=>{
+    .get('/:cid', authentication, async (req,res)=>{
         const {cid} = req.params
 
         const cart = await cartsModel.findOne({_id: cid }) 
@@ -13,7 +14,7 @@ router
             payload: cart        
         })
     })
-    .post('/', async (req,res)=>{
+    .post('/', authentication, async (req,res)=>{
         const newCart = req.body
 
         const result = await cartsModel.create(newCart)
@@ -25,7 +26,7 @@ router
         })
     });
 
-    router.delete('/:cid', async (req, res) => {
+    router.delete('/:cid', authentication, async (req, res) => {
       try {
         const { cid } = req.params;
         await cartsModel.deleteOne({_id: cid})
@@ -35,7 +36,7 @@ router
     }
     });
 
-    router.put('/:cid', async (req,res) => {
+    router.put('/:cid', authentication, async (req,res) => {
       try {
         const { cid } = req.params;
         const productsToReplace = req.body;

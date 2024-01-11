@@ -1,9 +1,10 @@
 const { Router } = require('express')
 const { orderModel } = require('../../dao/mongo/models/orders.model')
+const { authentication } = require('../../middlewares/auth.middleware')
 const router = Router()
 //
 
-router.get('/', async (req, res) =>{
+router.get('/', authentication, async (req, res) =>{
 /*try {*/
     // const orders = await orderModel.find({})
     const {size} = req.query;

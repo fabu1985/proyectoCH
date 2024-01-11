@@ -39,12 +39,13 @@ router.get('/', authentication, async (req, res) =>{
 // POST localhost:8080  /api/users /
 router.post('/', async (req, res) =>{
     try {
-        const {first_name, last_name, email} = req.body
+        const {first_name, last_name, email, password} = req.body
         // validación
         const result = await usersModel.create({
             first_name,
             last_name,
-            email
+            email,
+            password
         })
         console.log(first_name, last_name, email)
         res.status(201).send({ 
@@ -57,7 +58,7 @@ router.post('/', async (req, res) =>{
     
 });
 // PUT localhost:8080  /api/users /:uid
-router.put('/:uid',  async (req, res) =>{
+router.put('/:uid', authentication,  async (req, res) =>{
 
     const { uid } = req.params
     const userToReplace = req.body
@@ -70,7 +71,7 @@ router.put('/:uid',  async (req, res) =>{
 })
 
 // DELETE localhost:8080  /api/users /:uid
-router.delete('/:uid', async  (req, res)=> {
+router.delete('/:uid', authentication, async  (req, res)=> {
     const { uid } = req.params
 
     const result = await usersModel.deleteOne({_id: uid})
