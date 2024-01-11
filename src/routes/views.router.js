@@ -1,7 +1,7 @@
 const { Router } = require('express');
-const { productsModel } = require('../dao/mongo/models/ecommerce.model');
-const { cartsModel } = require('../dao/mongo/models/ecommerce.model');
-const router = Router();
+const { productsModel, usersModel } = require('../dao/mongo/models/ecommerce.model');
+const { authentication } = require('../middlewares/auth.middleware')
+const router = Router()
 
 router.get('/', (req, res) => {
     res.render('index', {
@@ -10,8 +10,8 @@ router.get('/', (req, res) => {
     })
   });
 
-  router.get('/carts', async (req, res) => {
-    const { numPage=1, limit=2 } = req.query
+  router.get('/products', authentication, async (req, res) => {
+    const { numPage, limit=20 } = req.query
     const {
         docs,
         hasPrevPage,
@@ -20,28 +20,11 @@ router.get('/', (req, res) => {
         nextPage,
         page
     } = await productsModel.paginate({}, {limit, page: numPage, lean: true})
-    res.render('carts', {
-        carts: docs,
-        hasNextPage,
-        hasPrevPage,
-        prevPage,
-        nextPage,
-        page
-    })
-  });
-
-router.get('/products', async (req, res) => {
-    const { numPage=1, limit=10, sort } = req.query
-    const {
-        docs,
-        hasPrevPage,
-        hasNextPage,
-        prevPage,
-        nextPage,
-        page
-    } = await productsModel.paginate({}, {limit, page: numPage, sort, lean: true})
-    // console.log(result)
-    res.render('products', {
+        res.render('products', {
+        name: req.session.user.first_name,
+        lastName: req.session.user.last_name,
+        mail: req.session.user.email,
+        rol: req.session.user.admin,
         products: docs,
         hasNextPage,
         hasPrevPage,

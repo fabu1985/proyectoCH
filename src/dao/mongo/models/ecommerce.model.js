@@ -1,5 +1,15 @@
 const {Schema, model} = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
+const messagesCollection = 'messages';
+const messagesSchema = Schema({
+    user: {
+        type: String,
+        required: true
+    },
+    message: String
+});
+
+const messagesModel = model(messagesCollection, messagesSchema);
 
 // productos
 const productsCollection = 'products';
@@ -24,6 +34,7 @@ const productsSchema = Schema({
 productsSchema.plugin(mongoosePaginate);
 const productsModel = model(productsCollection, productsSchema);
 
+// del profe en clases
 const cartsSchema = new Schema({
     products: {
         type: [{
@@ -40,7 +51,26 @@ cartsSchema.pre('findOne', function () {
 cartsSchema.plugin(mongoosePaginate);
 
 const cartsModel = model('carts', cartsSchema)
+//// hasta aca del profe en clsaes para carts
+const usersCollection = 'Usuarios'
+const usersSchema = Schema({
+    first_name: {
+        type: String,
+        required: true
+    },
+    last_name: String,
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String
+    }
+});
+usersSchema.plugin(mongoosePaginate)
+const usersModel = model(usersCollection, usersSchema)
 
 module.exports = {
-    productsModel, cartsModel
+    messagesModel, productsModel, cartsModel, usersModel
 }

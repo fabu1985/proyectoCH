@@ -4,10 +4,17 @@ const handlebars = require ('express-handlebars');
 const productsRouter = require('./routes/apis/products.router.js');
 const carritoRouter = require('./routes/apis/carts.router.js');
 const viewsRouter = require('./routes/views.router.js');
+const userRouter = require('./routes/apis/users.router.js')
+const ordersRouter = require('./routes/apis/orders.router.js')
+const sessionsRouter = require('./routes/apis/sessions.router.js')
+/////const chatRouter = require('./routes/chat.router.js');
 const { uploader } = require('./utils/uploader.js')
 const { Server } = require('socket.io');
-//IMPORTAR moongose
 const { connect } = require('mongoose');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const FileStore = require('session-file-store');
+const MongoStore = require('connect-mongo');
 
 const app = express();
 const PORT = process.env.PORT || 4040;
@@ -26,6 +33,42 @@ app.post('/uploader', uploader.single('myFile'), (req,res)=>{
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(__dirname+'/public'));
+app.use(cookieParser('p@l@br@seCret@'));
+///estrategia de session con mongo
+const fileStore = new FileStore(session);
+app.use(session({
+  store: MongoStore.create({
+    mongoUrl: 'mongodb+srv://fabianadiazp:FABU1985@cluster0.qn3ysof.mongodb.net/ecommerce?retryWrites=true&w=majority',
+    mongoOptions: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    },
+    ttl: 1500
+  }),
+  secret: 'secretCoder',
+  resave: true, 
+  saveUninitialized: true
+}));
+
+/*
+/// clase 19 inicio
+const fileStore = new FileStore(session);
+app.use(session({
+  store: new fileStore({
+    path: './sessions',
+    ttl: 100,
+    retire: 0
+  }),
+  secret: 'secretCoder',
+  resave: true, 
+  saveUninitialized: true
+}));
+ // estrategia memoria session
+app.use(session({
+    secret: 'secretCoder',
+    resave: true, 
+    saveUninitialized: true
+}))*/
 
 //configuracion de handlebars (motor de plantilla HANDLEBARS)
 app.engine('hbs', handlebars.engine({
@@ -33,10 +76,20 @@ app.engine('hbs', handlebars.engine({
 }));
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
+////app.set('chat', __dirname + '/chat');
 
 app.use('/api/products', productsRouter);
 app.use('/api/carts', carritoRouter);
+app.use('/api/users', userRouter)
+////app.use('/chat', chatRouter);
 app.use('/views', viewsRouter);
+app.use('/api/orders', ordersRouter);
+app.use('/api/sessions', sessionsRouter);
+
+app.use(( err, req, res, next)=>{
+  console.error(err.stack)
+  res.status(500).send('error de server')
+});
 
 //server express http
 const serverHttp = app.listen(PORT,err => {
@@ -55,5 +108,5 @@ io.on('connection', socket => {
   socket.on('message', data => {
     messagesArray.push(data);
     io.emit('messageLogs', messagesArray)
-  })
-})
+  });
+});
