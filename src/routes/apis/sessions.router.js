@@ -1,20 +1,3 @@
-/* const { Router } = require('express')
-const router = Router();
-
-router.get('/setcookies', (req, res) => {
-    res.cookie('coderCookie', 'esta es una cookie muy poderosa', {maxAge: 10000}).send('cookies')
-  });
-
-  router.get('/getcookies', (req, res) => {
-    res.send('cookies')
-  });
-
-  router.get('/deletecookies', (req, res) => {
-    res.send('cookies')
-  });
-
-module.exports = router; */
-
 const {Router } = require('express');
 const { authentication } = require('../../middlewares/auth.middleware');
 const { usersModel } = require('../../dao/mongo/models/ecommerce.model');
@@ -62,7 +45,7 @@ router.post('/register', async (req, res)=>{
 });
 
 router.post('/login', async (req, res)=>{
-  const {email , password } = req.body
+  const { email , password } = req.body
   // simulando consulta a la base de datos
   if (email === '' || password === '') {
       return res.send('todos los campos son obligatorios')
@@ -87,21 +70,21 @@ router.post('/login', async (req, res)=>{
 
 router.get('/current', authentication, (req, res) => {
     res.send('info sensible que solo puede ver el admin')
-});
+})
 
-router.get('/logout', (req, res)=>{
-    req.session.destroy(err=>{
-        if (err) return res.send({status: 'error', error: err})
-    })
-    // res.send('logout exitoso')
-    res.redirect('/api/users/login')
-});
+  router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+      if (err) return res.send({ status: 'error', error: err });
+    });
+    res.redirect('/');
+  });
+  
 
 // cookies
 router.get('/setcookies', (req, res) => {
     // cookie par key value 
     res.cookie('signedCookie', 'Esta es una cookie muy poderosa.', {maxAge: 100000000*24, signed:true}).send('cookies')
-});
+})
 
 router.get('/getCookies', (req, res) => {
     // console.log(req.cookies)
@@ -110,11 +93,11 @@ router.get('/getCookies', (req, res) => {
     // res.send(req.cookies)
     // cookie firmadas
     res.send(req.signedCookies)
-});
+})
 
 router.get('/deletecookies', (req, res) => {
     
     res.clearCookie('coderCookie').send('delete cookies')
-});
+})
 
 module.exports = router
