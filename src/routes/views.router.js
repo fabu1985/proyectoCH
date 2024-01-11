@@ -31,6 +31,7 @@ router.get('/', (req, res) => {
         name: req.session.user.first_name,
         lastName: req.session.user.last_name,
         mail: req.session.user.email,
+        rol: req.session.user.admin,
         products: docs,
         hasNextPage,
         hasPrevPage,
