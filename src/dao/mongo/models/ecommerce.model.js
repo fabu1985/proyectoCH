@@ -34,16 +34,6 @@ const productsSchema = Schema({
 productsSchema.plugin(mongoosePaginate);
 const productsModel = model(productsCollection, productsSchema);
 
-/// carritos
-/*
-//este anda bien
-const cartsCollection = 'carts';
-const cartsSchema = Schema({
-    products: String
-});
-const cartsModel = model(cartsCollection, cartsSchema);*/
-
-
 // del profe en clases
 const cartsSchema = new Schema({
     products: {
