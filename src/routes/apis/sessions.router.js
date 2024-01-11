@@ -29,20 +29,16 @@ router.get('/', (req, res)=>{
         res.send(`Se ha visatado esta página ${req.session.counter}`)
     }else{
         req.session.counter = 1
-        req.session.firts_name = 'fede' 
+        req.session.first_name = 'fede' 
         res.send('Bienvenido a sessions')
     }
-    // res.send('sessions')
 });
 
 router.post('/register', async (req, res)=>{
   const { first_name, last_name, email , password } = req.body
-  
-
   if (first_name ==='' || password === "" || email === '' ) {
       return res.send('completar datos requeridos')
   }
-
   const userFound = await usersModel.findOne({email})
   if (userFound) {
       return res.send({status: 'error', error: 'existant user'})
@@ -54,7 +50,6 @@ router.post('/register', async (req, res)=>{
       password
   }
   const result = await usersModel.create(newUser)
-  
   res.send({
       status: 'success',
       payload: {
@@ -72,24 +67,21 @@ router.post('/login', async (req, res)=>{
   if (email === '' || password === '') {
       return res.send('todos los campos son obligatoris')
   }
-  
   const user = await usersModel.findOne({email})
   if (!user) {
       return res.send('email inexistente')
   }
-
-  // validar si es el password
   if (password !== user.password) {
       return res.send('contraseña erronea')
   }
-
   req.session.user = {
       user: user._id,
       first_name: user.first_name,
       last_name: user.last_name,
+      email: user.email,
       admin: true
   }
-  res.redirect('/')
+  res.redirect('/views/products?numPage=1')
 });
 
 
@@ -101,7 +93,8 @@ router.get('/logout', (req, res)=>{
     req.session.destroy(err=>{
         if (err) return res.send({status: 'error', error: err})
     })
-    res.send('logout exitoso')
+    // res.send('logout exitoso')
+    res.redirect('/api/users/login')
 });
 
 // cookies

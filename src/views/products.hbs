@@ -1,5 +1,15 @@
-<h1>Bienvenidos a Lista de Productos</h1>
-
+<h1>Bienvenid@ {{ name }}</h1>
+<div>
+    <strong>Datos de usuario
+</div>
+<div>
+    <strong>Apellido: {{lastName}}
+</div>
+<div>
+    <strong>Email: {{mail}}
+</div>
+<br>
+<h1>Lista de Productos</h1>
 <div>
     {{#each products}}
     <li>
@@ -9,10 +19,15 @@
 </div>
 <div class="text-center">
     {{#if hasPrevPage}}
-        <a href="/views/products?numPage={{prevPage}}" class="btn btn-outline-dark">Anterior</a>
+    <a href="/views/products?numPage={{prevPage}}" class="btn btn-outline-dark">Anterior</a>
     {{/if}}
     <label>5</label>
     {{#if hasNextPage}}
-        <a href="/views/products?numPage={{nextPage}}" class="btn btn-outline-dark">Siguiente</a>
+    <a href="/views/products?numPage={{nextPage}}" class="btn btn-outline-dark">Siguiente</a>
     {{/if}}
 </div>
+<br>
+
+<form action="/api/sessions/logout" method="GET" , class="form-group">
+    <button>Logout</button>
+</form>

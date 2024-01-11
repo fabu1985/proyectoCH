@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { productsModel } = require('../dao/mongo/models/ecommerce.model');
+const { productsModel, usersModel } = require('../dao/mongo/models/ecommerce.model');
 const router = Router()
 
 const productMock = [
@@ -27,8 +27,10 @@ router.get('/', (req, res) => {
         nextPage,
         page
     } = await productsModel.paginate({}, {limit, page: numPage, lean: true})
-    // console.log(result)
-    res.render('products', {
+        res.render('products', {
+        name: req.session.user.first_name,
+        lastName: req.session.user.last_name,
+        mail: req.session.user.email,
         products: docs,
         hasNextPage,
         hasPrevPage,

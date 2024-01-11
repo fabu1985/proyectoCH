@@ -5,10 +5,8 @@ const router = Router();
 
 router.get('/', async (req, res) =>{
   try {
-    // const users = await usersModel.find({}).limit(50) // 5000 -> 100
     const products = await productsModel.paginate({}, {limit: 10, page: 1, lean: true}) 
     res.send(products)
-    
 } catch (error) {
     console.log(error)
 }
