@@ -1,4 +1,4 @@
-const { userModel } = require("./models/users.model")
+const { userModel } = require("./models/ecommerce.model")
 
 class UserDaoMongo {
     constructor(){
@@ -13,6 +13,9 @@ class UserDaoMongo {
     }
     async getUser(uid){
         return await this.model.findOne({_id: uid})
+    }
+    async getUserBy(filter){
+        return await this.model.findOne(filter)
     }
     async createUser(newUser){
         return await this.model.create(newUser)
