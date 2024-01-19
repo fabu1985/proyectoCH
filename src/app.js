@@ -17,16 +17,16 @@ const FileStore = require('session-file-store');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const { initializePassport } =  require('./config/passport.config.js');
+const { connectDB } = require('./config/index.js');
 
 const app = express();
 const PORT = process.env.PORT || 4040;
 //conectar a la bd de mongo
-const connectDb = async () => {
+/* const connectDb = async () => {
   //al invocar, cuando levantos se crea la base de datos sola desde la consola la puedo ver
   await connect('mongodb+srv://fabianadiazp:FABU1985@cluster0.qn3ysof.mongodb.net/ecommerce?retryWrites=true&w=majority');
   console.log('base de datos conectada')
-}
-connectDb()
+} */ 
 
 initializePassport()
 app.use(session({ secret: 'p@l@br@seCret@' }))
@@ -42,7 +42,8 @@ app.use(express.static(__dirname+'/public'));
 app.use(cookieParser('p@l@br@seCret@'));
 ///estrategia de session con mongo
 const fileStore = new FileStore(session);
-app.use(session({
+
+ app.use(session({
   store: MongoStore.create({
     mongoUrl: 'mongodb+srv://fabianadiazp:FABU1985@cluster0.qn3ysof.mongodb.net/ecommerce?retryWrites=true&w=majority',
     mongoOptions: {
@@ -62,6 +63,8 @@ app.engine('hbs', handlebars.engine({
 }));
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
+connectDB()
+
 ////app.set('chat', __dirname + '/chat');
 
 app.use('/api/products', productsRouter);
