@@ -15,6 +15,8 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const FileStore = require('session-file-store');
 const MongoStore = require('connect-mongo');
+const passport = require('passport');
+const { initializePassport } =  require('./config/passport.config.js');
 
 const app = express();
 const PORT = process.env.PORT || 4040;
@@ -25,6 +27,10 @@ const connectDb = async () => {
   console.log('base de datos conectada')
 }
 connectDb()
+
+initializePassport()
+app.use(session({ secret: 'p@l@br@seCret@' }))
+app.use(passport.session())
 
 app.post('/uploader', uploader.single('myFile'), (req,res)=>{
   res.send('Imagen subida')
@@ -49,26 +55,6 @@ app.use(session({
   resave: true, 
   saveUninitialized: true
 }));
-
-/*
-/// clase 19 inicio
-const fileStore = new FileStore(session);
-app.use(session({
-  store: new fileStore({
-    path: './sessions',
-    ttl: 100,
-    retire: 0
-  }),
-  secret: 'secretCoder',
-  resave: true, 
-  saveUninitialized: true
-}));
- // estrategia memoria session
-app.use(session({
-    secret: 'secretCoder',
-    resave: true, 
-    saveUninitialized: true
-}))*/
 
 //configuracion de handlebars (motor de plantilla HANDLEBARS)
 app.engine('hbs', handlebars.engine({

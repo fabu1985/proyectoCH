@@ -1,9 +1,9 @@
 const {Router } = require('express');
 const { authentication } = require('../../middlewares/auth.middleware');
 const { usersModel } = require('../../dao/mongo/models/ecommerce.model');
+const { createHash, isValidPassword } = require('../../utils/hashPassword');
 
 const router = Router();
-
 
 router.get('/', (req, res)=>{
     if (req.session.counter) {
@@ -30,9 +30,10 @@ router.post('/register', async (req, res)=>{
       first_name,
       last_name,
       email,
-      password
+      password: createHash(password)
   }
   const result = await usersModel.create(newUser)
+  
   res.send({
       status: 'success',
       payload: {
