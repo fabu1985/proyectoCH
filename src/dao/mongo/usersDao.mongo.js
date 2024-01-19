@@ -20,7 +20,9 @@ class UserDaoMongo {
     async createUser(newUser){
         return await this.model.create(newUser)
     }
-    async updateUser(uid){}
+    async updateUser(uid, userUpdate){
+        return await this.model.findOne({_id: uid}, userUpdate)
+    }
     async deleteUser(uid){}
 }
 

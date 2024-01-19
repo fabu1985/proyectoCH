@@ -1,12 +1,65 @@
 const passport = require('passport')
 const local    = require('passport-local')
-const UserDaoMongo = require('../dao/mongo/usersDao.mongo.js')
+const { usersModel } = require('../dao/mongo/models/ecommerce.model.js')
 const { createHash, isValidPassword } = require('../utils/hashPassword.js')
-const GitHubStrategy = require('passport-github2')
-
+const UserDaoMongo = require('../dao/mongo/usersDao.mongo.js')
 const LocalStrategy = local.Strategy
-const userService   = new UserDaoMongo() 
+const userService = new UserDaoMongo()
 
+exports.initializePassport = () => {
+    passport.use('register', new LocalStrategy({
+        passReqToCallback: true,
+        usernameField: 'email'
+    }, async (req, username, password, done) => {
+        try{
+            const { first_name, last_name, email } = req.body
+            let userFound = await userService.getUserBy({email: username})
+            if (user) return done(null, false)
+
+            let newUser = {
+                first_name,
+                last_name,
+                email: username,
+                password: createHash(password)
+            }
+            let result = await userService.createUser(newUser)
+            return done(null, result)
+        } catch (error) {
+            return done('Error al crear un usuario'+error)
+        }
+    }))
+}
+
+
+///esto es para guardar y recuperar credencialaes del susuarion de sesession
+passport.serializeUser((user,done)=> {
+    done(null, user.id)
+})
+passport.deserializeUser(async (id, done) => {
+    let user = await userService.getUserBy({_id: id})
+    done(null, user)
+})
+
+passport.use('login', new LocalStrategy({
+    usernameField: 'email'
+}, async (username, password, done) => {
+    try{
+        const user = await userService.getUserBy({email: username})
+        if(!user){
+            console.log('user not found')
+            return done(null, false)
+        }
+        if(!isValidPassword(password, {password})) return done(null,false)
+        return done(null, false)
+    } catch (error) {
+       return done(error) 
+    }
+}))
+// const GitHubStrategy = require('passport-github2')
+// const UserDaoMongo = require('../dao/mongo/usersDao.mongo.js')
+// const userService   = new UserDaoMongo() 
+
+/*
 exports.initializePassport = () => {
     // una estrategia es un middleware
     
@@ -43,9 +96,9 @@ exports.initializePassport = () => {
         let user = await userService.geUsertBy({_id: id})
         done(null, user)
     })
-}
+} */
 
-/* 
+/*
 exports.initializePassport = () => {
     // una estrategia es un middleware
     passport.use('register', new LocalStrategy({
@@ -90,5 +143,7 @@ exports.initializePassport = () => {
         } catch (error) {
             return done(error)
         }
-    }))
-} */
+    })
+    )
+}
+*/

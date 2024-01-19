@@ -15,6 +15,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const FileStore = require('session-file-store');
 const MongoStore = require('connect-mongo');
+//passport
 const passport = require('passport');
 const { initializePassport } =  require('./config/passport.config.js');
 const { connectDB } = require('./config/index.js');
@@ -56,6 +57,10 @@ const fileStore = new FileStore(session);
   resave: true, 
   saveUninitialized: true
 }));
+// middleware del passport
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 //configuracion de handlebars (motor de plantilla HANDLEBARS)
 app.engine('hbs', handlebars.engine({
