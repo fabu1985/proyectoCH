@@ -33,7 +33,7 @@ router.post('/register', async (req, res)=>{
       password: createHash(password)
   }
   const result = await usersModel.create(newUser)
-  
+
   res.send({
       status: 'success',
       payload: {
@@ -55,9 +55,12 @@ router.post('/login', async (req, res)=>{
   if (!user) {
       return res.send('email inexistente')
   }
-  if (password !== user.password) {
+  if (!password == user.password) {
       return res.send('contraseña erronea')
   }
+  if (!isValidPassword (password, {password: user.password})) {
+    return res.send('email o contraseña erroneas')
+}
   req.session.user = {
       user: user._id,
       first_name: user.first_name,
