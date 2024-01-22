@@ -44,7 +44,10 @@ app.use(cookieParser('p@l@br@seCret@'));
 ///estrategia de session con mongo
 const fileStore = new FileStore(session);
 
- app.use(session({
+initializePassport()
+
+
+app.use(session({
   store: MongoStore.create({
     mongoUrl: 'mongodb+srv://fabianadiazp:FABU1985@cluster0.qn3ysof.mongodb.net/ecommerce?retryWrites=true&w=majority',
     mongoOptions: {
@@ -57,10 +60,10 @@ const fileStore = new FileStore(session);
   resave: true, 
   saveUninitialized: true
 }));
+
 // middleware del passport
-initializePassport()
 app.use(passport.initialize())
-app.use(passport.session())
+// app.use(passport.session())
 
 //configuracion de handlebars (motor de plantilla HANDLEBARS)
 app.engine('hbs', handlebars.engine({
