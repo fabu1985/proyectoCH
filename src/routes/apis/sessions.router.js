@@ -1,103 +1,86 @@
 const {Router } = require('express');
 const { authentication } = require('../../middlewares/auth.middleware');
 const { usersModel } = require('../../dao/mongo/models/ecommerce.model');
+const { createHash, isValidPassword } = require('../../utils/hashPassword');
+const passport = require('passport');
+
 
 const router = Router();
 
+/*
+// routes de passoport
+router.post('/register', passport.authenticate('register', {failureRedirect: '/api/sessions/failregister'}),(req, res)=>{
+    res.json({status: 'success', message: 'user created'})
+})
 
-router.get('/', (req, res)=>{
-    if (req.session.counter) {
-        req.session.counter ++
+// este anda con el crypt
+ 
+// router.post('/register', async (req, res)=>{
+ //   const { first_name, last_name, email , password } = req.body
+ //   if (first_name ==='' || password === "" || email === '' ) {
+ //       return res.send('completar datos requeridos')
+ //   }
+ //   const userFound = await usersModel.findOne({email})
+ //   if (userFound) {
+ //       return res.send({status: 'error', error: 'existant user'})
+ //   }
+ //   const newUser = {
+ //       first_name,
+ //       last_name,
+ //       email,
+ //       password: createHash(password)
+ //   }
+   // const result = await usersModel.create(newUser)
+  
+   // res.send({
+  //      status: 'success',
+  //      payload: {
+  //          first_name: result.first_name,
+  //          last_name: result.last_name,
+  //          email: result.email,
+  //          _id: result._id
+  //      }
+  //  })
+  // });
 
-        res.send(`Se ha visatado esta página ${req.session.counter}`)
-    }else{
-        req.session.counter = 1
-        req.session.first_name = 'fede' 
-        res.send('Bienvenido a sessions')
+
+router.get('/failregister', async (req, res)=>{
+    console.log('Fail strategy')
+    res.send({status: 'error', error: 'Failed'})
+})
+
+router.post('/login', passport.authenticate('login', {failureRedirect: '/api/sessions/faillogin'}), async (req, res) => {
+    if(!req.user) return res.status(400).send({status: 'error', error: 'invalid credential'})
+    req.session.user = {
+        email: req.user.email,
+        first_name: req.user.first_name
     }
-});
+    res.send({status: 'success', message: 'login success'})
+})
 
-router.post('/register', async (req, res)=>{
-  const { first_name, last_name, email , password } = req.body
-  if (first_name ==='' || password === "" || email === '' ) {
-      return res.send('completar datos requeridos')
-  }
-  const userFound = await usersModel.findOne({email})
-  if (userFound) {
-      return res.send({status: 'error', error: 'existant user'})
-  }
-  const newUser = {
-      first_name,
-      last_name,
-      email,
-      password
-  }
-  const result = await usersModel.create(newUser)
-  res.send({
-      status: 'success',
-      payload: {
-          first_name: result.first_name,
-          last_name: result.last_name,
-          email: result.email,
-          _id: result._id
-      }
-  })
-});
-
-router.post('/login', async (req, res)=>{
-  const { email , password } = req.body
-  // simulando consulta a la base de datos
-  if (email === '' || password === '') {
-      return res.send('todos los campos son obligatorios')
-  }
-  const user = await usersModel.findOne({email})
-  if (!user) {
-      return res.send('email inexistente')
-  }
-  if (password !== user.password) {
-      return res.send('contraseña erronea')
-  }
-  req.session.user = {
-      user: user._id,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      admin: true
-  }
-  res.redirect('/views/products?numPage=1')
-});
-
+router.get('/faillogin', (req, res) => {
+    res.send({error: 'failed login'})
+})
 
 router.get('/current', authentication, (req, res) => {
     res.send('info sensible que solo puede ver el admin')
+}) */
+router.get('/github', passport.authenticate('github', {scope: ['user:email']}), async (req,res)=>{})
+
+router.get('/githubcallback', passport.authenticate('github', {failureRedirect: '/login'}),(req,res)=> {
+    req.session.user = req.user
+    res.redirect('/')
 })
 
-  router.get('/logout', (req, res) => {
+router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
       if (err) return res.send({ status: 'error', error: err });
     });
+    res.send('logout exitoso');
     res.redirect('/');
   });
-  
 
-// cookies
-router.get('/setcookies', (req, res) => {
-    // cookie par key value 
-    res.cookie('signedCookie', 'Esta es una cookie muy poderosa.', {maxAge: 100000000*24, signed:true}).send('cookies')
+  router.get('/current', authentication, (req, res) => {
+    res.send('info sensible que solo puede ver el admin')
 })
-
-router.get('/getCookies', (req, res) => {
-    // console.log(req.cookies)
-    console.log(req.signedCookies)
-    
-    // res.send(req.cookies)
-    // cookie firmadas
-    res.send(req.signedCookies)
-})
-
-router.get('/deletecookies', (req, res) => {
-    
-    res.clearCookie('coderCookie').send('delete cookies')
-})
-
 module.exports = router
