@@ -1,5 +1,6 @@
 const {Schema, model} = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
+
 const messagesCollection = 'messages';
 const messagesSchema = Schema({
     user: {
