@@ -31,10 +31,11 @@ exports.initializePassport = () => {
          return done(null, result)
         }
         done(null, user)
-    } catch (error) {
+
+    }  catch (error) {
         return done(error)
     }
- }))
+}))
 
 ///esto es para guardar y recuperar credencialaes del susuarion de sesession
 passport.serializeUser((user,done)=> {

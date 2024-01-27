@@ -68,24 +68,12 @@ router.post('/login', async (req, res)=>{
       return res.send('email o contraseña erroneas')
   }
   const token = createToken({id:user._id, role: user.role})
-
-    // req.session.user = {
-     //    user: user._id,
-     //    first_name: user.first_name,
-     //    last_name: user.last_name,
-     //    email: user.email,
-     //    admin: true
-    // }
-    
-    res.json({
+      res.cookie('token', token, {
+        maxAge: 60 * 60 * 1000 * 24}).json({
         status: 'success',
-        payload: {
-            id: user._id,
-            first_name: user.first_name,
-            last_name: user.last_name
-        },
-        token
+        message: 'logged in'
     })
+    res.send('datos sensibles')
     //res.redirect('/views/products?numPage=1')
   });
 

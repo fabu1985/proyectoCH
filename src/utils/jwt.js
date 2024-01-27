@@ -12,8 +12,8 @@ const authenticationToken = (req, res, next) => {
     jwt.verify(token, JWT_PRIVATE_KEY, (err, userDecode)=>{
         if(err) return res.status(401).json({status: 'error', error: 'not authorized'})
         console.log(userDecode)
-        //req.user = userDecode
-        //next()
+        req.user = userDecode
+        next()
     })
 }
 
