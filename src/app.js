@@ -29,25 +29,7 @@ const PORT = process.env.PORT || 4040;
   console.log('base de datos conectada')
 } */ 
 
-initializePassport()
-app.use(session({ secret: 'p@l@br@seCret@' }))
-app.use(passport.session())
-
-app.post('/uploader', uploader.single('myFile'), (req,res)=>{
-  res.send('Imagen subida')
-});
-
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(express.static(__dirname+'/public'));
-app.use(cookieParser('p@l@br@seCret@'));
-///estrategia de session con mongo
-const fileStore = new FileStore(session);
-
-initializePassport()
-
-
-app.use(session({
+ app.use(session({
   store: MongoStore.create({
     mongoUrl: 'mongodb+srv://fabianadiazp:FABU1985@cluster0.qn3ysof.mongodb.net/ecommerce?retryWrites=true&w=majority',
     mongoOptions: {
@@ -61,9 +43,21 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// middleware del passport
+initializePassport()
+app.use(session({ secret: 'p@l@br@seCret@' }))
 app.use(passport.initialize())
-// app.use(passport.session())
+app.use(passport.session())
+
+app.post('/uploader', uploader.single('myFile'), (req,res)=>{
+  res.send('Imagen subida')
+});
+
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.static(__dirname+'/public'));
+app.use(cookieParser('p@l@br@seCret@'));
+///estrategia de session con mongo
+const fileStore = new FileStore(session);
 
 //configuracion de handlebars (motor de plantilla HANDLEBARS)
 app.engine('hbs', handlebars.engine({
