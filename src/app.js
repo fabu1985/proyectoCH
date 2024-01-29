@@ -7,6 +7,7 @@ const viewsRouter = require('./routes/views.router.js');
 const userRouter = require('./routes/apis/users.router.js')
 const ordersRouter = require('./routes/apis/orders.router.js')
 const sessionsRouter = require('./routes/apis/sessions.router.js')
+const pruebasRouter = require('./routes/apis/pruebas.router.js')
 /////const chatRouter = require('./routes/chat.router.js');
 const { uploader } = require('./utils/uploader.js')
 const { Server } = require('socket.io');
@@ -21,14 +22,8 @@ const { connectDB } = require('./config/index.js');
 
 const app = express();
 const PORT = process.env.PORT || 4040;
-//conectar a la bd de mongo
-/* const connectDb = async () => {
-  //al invocar, cuando levantos se crea la base de datos sola desde la consola la puedo ver
-  await connect('mongodb+srv://fabianadiazp:FABU1985@cluster0.qn3ysof.mongodb.net/ecommerce?retryWrites=true&w=majority');
-  console.log('base de datos conectada')
-} */ 
 
- app.use(session({
+app.use(session({
   store: MongoStore.create({
     mongoUrl: 'mongodb+srv://fabianadiazp:FABU1985@cluster0.qn3ysof.mongodb.net/ecommerce?retryWrites=true&w=majority',
     mongoOptions: {
@@ -42,19 +37,19 @@ const PORT = process.env.PORT || 4040;
   saveUninitialized: true
 }));
 
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.static(__dirname+'/public'));
+app.use(cookieParser('p@l@br@seCret@'));
+
 initializePassport()
-app.use(session({ secret: 'p@l@br@seCret@' }))
 app.use(passport.initialize())
-app.use(passport.session())
 
 app.post('/uploader', uploader.single('myFile'), (req,res)=>{
   res.send('Imagen subida')
 });
 
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(express.static(__dirname+'/public'));
-app.use(cookieParser('p@l@br@seCret@'));
+
 ///estrategia de session con mongo
 const fileStore = new FileStore(session);
 
@@ -69,6 +64,7 @@ connectDB()
 ////app.set('chat', __dirname + '/chat');
 
 app.use('/api/products', productsRouter);
+app.use('/api/pruebas', pruebasRouter);
 app.use('/api/carts', carritoRouter);
 app.use('/api/users', userRouter)
 ////app.use('/chat', chatRouter);
