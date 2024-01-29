@@ -4,17 +4,12 @@ const { usersModel } = require('../../dao/mongo/models/ecommerce.model');
 const { createHash, isValidPassword } = require('../../utils/hashPassword');
 const passport = require('passport');
 const { createToken, authenticationToken } = require('../../utils/jwt');
+const { passportCall } = require('../../utils/passportCall');
+const { authorizationJwt } = require('../../middlewares/jwtPassport.middleware');
 
 const router = Router();
 
-router.get('/github', passport.authenticate('github', {scope:['user:email']}), async (req,res)=>{})
-
-router.get('/githubcallback', passport.authenticate('github', {failureRedirect: '/login'}),(req, res)=>{
-    req.session.user = req.user
-    res.redirect('/')
-
-})
-  router.post('/register', async (req, res)=>{
+router.post('/register', async (req, res)=>{
     const { first_name, last_name, email , password } = req.body
     if (first_name ==='' || password === "" || email === '' ) {
         return res.send('completar datos requeridos')
@@ -31,16 +26,15 @@ router.get('/githubcallback', passport.authenticate('github', {failureRedirect: 
     }
     const result = await usersModel.create(newUser)
     const token = createToken({id:result._id})
-    res.send({
+    res.cookie('token', token, {
+        maxAge: 60 * 60 * 1000 * 24,
+        httpOnly: true,
+        //secure:true,
+        //sameSite: 'none'
+      }).json({
         status: 'success',
-        payload: {
-            first_name: result.first_name,
-            last_name: result.last_name,
-            email: result.email,
-            _id: result._id
-        },
-        token
-    })
+        message: 'logged id'
+       })
    });
 
    router.post('/login', async (req, res)=>{
@@ -56,15 +50,20 @@ router.get('/githubcallback', passport.authenticate('github', {failureRedirect: 
     if (!isValidPassword (password, {password: user.password})) {
       return res.send('email o contraseña erroneas')
   }
-  const token = createToken({id:user._id, role: user.role})
-  res.json({
+  const token = createToken({id:user._id, role: 'user'})
+  res.cookie('token', token, {
+    maxAge: 60 * 60 * 1000 * 24,
+    httpOnly: true,
+    //secure:true,
+    //sameSite: 'none'
+  }).json({
     status: 'success',
+    message: 'logged id',
     payload: {
         id: user._id,
         first_name: user.first_name,
         last_name: user.last_name
-    },
-    token
+    }
    })
 })
 
@@ -77,8 +76,8 @@ router.get('/faillogin', (req, res) => {
     res.send({error: 'failed login'})
 })
 
-router.get('/current', authenticationToken,(req, res)=>{
-    res.send('datos sensibles')
+router.get('/current', passportCall('jwt'), authorizationJwt('user'), (req, res)=>{
+    res.send({message: 'datos sensibles', reqUser: req.user})
 })
 
 router.get('/logout', (req, res) => {
