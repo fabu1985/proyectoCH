@@ -1,6 +1,5 @@
 const {Schema, model} = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
-
 const messagesCollection = 'messages';
 const messagesSchema = Schema({
     user: {
@@ -67,6 +66,15 @@ const usersSchema = Schema({
     },
     password: {
         type: String
+    },
+    role: {
+        type: String,
+        enum: ['user', 'user_premium', 'admin'],
+        default: 'user'
+    },
+    atCreated: {
+        type: Date,
+        default: Date()
     }
 });
 usersSchema.plugin(mongoosePaginate)

@@ -1,6 +1,6 @@
 const { Router } = require('express');
-const { cartsModel, productsModel } = require('../../dao/mongo/models/ecommerce.model.js')
-const { authentication } = require('../../middlewares/auth.middleware')
+const { cartsModel, productsModel } = require('../dao/mongo/models/ecommerce.model.js')
+const { authentication } = require('../middlewares/auth.middleware.js')
 const router = Router();
 
 router

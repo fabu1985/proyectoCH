@@ -1,6 +1,6 @@
 <center>
     <h1>Welcome to e-commerce</h1>
-    <form action="/api/sessions/login" method="POST" , class="form-group">
+    <form action="/api/sessions/login" method="POST" class="form-group" id="formularioLogin">
         <br>
         <input type="text" name="email" placeholder="email">
         <br>
@@ -11,7 +11,21 @@
     <a href="http://localhost:4040/api/users/register">
         Registrarme
     </a>
-            <br>
-
-    <a href="/api/sessions/github" class="btn-dark-mt-5">Github</a>
 </center>
+<script>
+    const form = document.querySelector('#formularioLogin')
+    form.addEventListener('submit', async function(ev){
+        ev.preventDefault()
+        fecth('http://localhost:4040/api/sessions/login', {
+            method: 'POST',
+            headers: {
+                "Content-type": "application/json",
+                "authorization": localStorage.getItem('token')
+            },
+            body: 
+            if(result.status == 200){
+                
+            }
+        })
+    })
+</script>
