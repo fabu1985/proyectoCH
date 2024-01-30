@@ -66,6 +66,15 @@ const usersSchema = Schema({
     },
     password: {
         type: String
+    },
+    role: {
+        type: String,
+        enum: ['user', 'user_premium', 'admin'],
+        default: 'user'
+    },
+    atCreated: {
+        type: Date,
+        default: Date()
     }
 });
 usersSchema.plugin(mongoosePaginate)
