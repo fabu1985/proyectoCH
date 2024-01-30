@@ -1,6 +1,6 @@
 const { Router } = require('express')
-const { usersModel } = require('../../dao/mongo/models/ecommerce.model')
-const { authentication } = require('../../middlewares/auth.middleware')
+const { usersModel } = require('../dao/mongo/models/ecommerce.model')
+const { authentication } = require('../middlewares/auth.middleware')
 
 const router = Router()
 //
@@ -39,13 +39,15 @@ router.get('/', authentication, async (req, res) =>{
 // POST localhost:8080  /api/users /
 router.post('/', async (req, res) =>{
     try {
-        const {first_name, last_name, email, password} = req.body
+        const {first_name, last_name, email, password, role, atCreated} = req.body
         // validación
         const result = await usersModel.create({
             first_name,
             last_name,
             email,
-            password
+            password,
+            role,
+            atCreated
         })
         console.log(first_name, last_name, email)
         res.status(201).send({ 
