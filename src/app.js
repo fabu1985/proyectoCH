@@ -9,11 +9,12 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const { initializePassport } =  require('./config/passport.config.js');
-const { connectDB } = require('./config/index.js');
+const { connectDB, configObject } = require('./config/index.js');
+
 const appRouter = require('./routes/index.router.js')
 
 const app = express();
-const PORT = process.env.PORT || 4040;
+const PORT = configObject.PORT
 const userClassRouter = new usersRouter()
 
 app.use(session({

@@ -1,8 +1,9 @@
 const { Router } = require('express')
-const { usersModel } = require('../dao/mongo/models/ecommerce.model')
 const { authentication } = require('../middlewares/auth.middleware')
+const UserDaoMongo = require('../dao/mongo/usersDao.mongo')
 
 const router = Router()
+const usersService = new UserDaoMongo
 //
 router.get('/register', async (req, res) =>{
     // sinc o async ?
@@ -27,7 +28,7 @@ router.get('/login', async (req, res) =>{
 router.get('/', authentication, async (req, res) =>{
     // sinc o async ?
     try {
-        const users = await usersModel.find({})
+        const users = await usersService.getUsers()
         res.send(users)
         
     } catch (error) {
@@ -37,11 +38,11 @@ router.get('/', authentication, async (req, res) =>{
 
 
 // POST localhost:8080  /api/users /
-router.post('/', async (req, res) =>{
+router.post('/', authentication, async (req, res) =>{
     try {
         const {first_name, last_name, email, password, role, atCreated} = req.body
         // validación
-        const result = await usersModel.create({
+        const result = await usersService.createUser({
             first_name,
             last_name,
             email,
@@ -60,12 +61,12 @@ router.post('/', async (req, res) =>{
     
 });
 // PUT localhost:8080  /api/users /:uid
-router.put('/:uid', authentication,  async (req, res) =>{
+router.put('/:uid',  async (req, res) =>{
 
     const { uid } = req.params
     const userToReplace = req.body
     // venga el id
-    const result = await usersModel.updateOne({_id: uid}, userToReplace)
+    const result = await usersService.updateUser({_id: uid}, userToReplace)
     res.status(201).send({ 
         status: 'success',
         payload: result 
@@ -76,7 +77,7 @@ router.put('/:uid', authentication,  async (req, res) =>{
 router.delete('/:uid', authentication, async  (req, res)=> {
     const { uid } = req.params
 
-    const result = await usersModel.deleteOne({_id: uid})
+    const result = await usersService.deleteUser({_id: uid})
     res.status(200).send({ 
         status: "success", 
         payload: result 
