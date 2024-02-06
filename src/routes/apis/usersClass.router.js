@@ -1,9 +1,9 @@
-const Router = require('./router.js')
-const { usersClassModel } = require('../dao/mongo/models/ecommerce.model.js')
+const Router = require('../router.js')
+const { usersClassModel } = require('../../dao/mongo/models/ecommerce.model.js')
 
 class UsersRouter extends Router {
     init(){
-        this.get('/', ['PUBLIC'], async (req,res)=>{
+        this.get('/', ['USER'], async (req,res)=>{
             try{
                 const users = 'users'
                 if(!users) return res.sendUserError('user not found nuevo coso')

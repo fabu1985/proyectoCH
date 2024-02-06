@@ -1,10 +1,32 @@
 const { connect } = require("mongoose")
+const dotenv = require('dotenv')
+const { program } = require("../utils/commander")
 
-exports.connectDB = async () => {
+
+const { mode } = program.opts()
+console.log('mode config: ', mode)
+dotenv.config({
+    path: mode == 'production' ? './.env.production' : './.env.development'
+})
+
+const configObject = {
+    PORT: process.env.PORT || 3333,
+    mongo_url: process.env.MONGO_URL,
+    jwt_secret_key: process.env.JWT_SECRET_KEY,
+    gh_client_id: '',
+    gh_secret_secret:''
+}
+
+const connectDB = async () => {
     try {
-        await connect('mongodb+srv://fabianadiazp:FABU1985@cluster0.qn3ysof.mongodb.net/ecommerce?retryWrites=true&w=majority')
+        await connect(process.env.MONGO_URL)
         console.log('Base de datos conectada')   
     } catch (err) {
         console.log(err)
     }
 } 
+
+module.exports = {
+    configObject,
+    connectDB
+}
