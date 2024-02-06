@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
     })
   });
 
-  router.get('/products', authentication, async (req, res) => {
+ /* router.get('/products', authentication, async (req, res) => {
     const { numPage, limit=20 } = req.query
     const {
         docs,
@@ -32,6 +32,6 @@ router.get('/', (req, res) => {
         nextPage,
         page
     })
-});
+});*/
 
 module.exports = router

@@ -1,7 +1,6 @@
 const express = require('express');
 const multer = require('multer');
 const handlebars = require ('express-handlebars');
-const usersRouter = require('./routes/usersClass.router.js');
 const { Server } = require('socket.io');
 const { connect } = require('mongoose');
 const cookieParser = require('cookie-parser');
@@ -9,12 +8,11 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const { initializePassport } =  require('./config/passport.config.js');
-const { connectDB } = require('./config/index.js');
-const appRouter = require('./routes/index.router.js')
-
+const { connectDB, configObject } = require('./config/index.js');
+const cors = require('cors')
+const appRouter = require('./routes/index.js')
 const app = express();
-const PORT = process.env.PORT || 4040;
-const userClassRouter = new usersRouter()
+const PORT = configObject.PORT
 
 app.use(session({
   store: MongoStore.create({
@@ -34,6 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(__dirname+'/public'));
 app.use(cookieParser('p@l@br@seCret@'));
+app.use(cors());
 
 initializePassport()
 app.use(passport.initialize())

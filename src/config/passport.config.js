@@ -1,13 +1,10 @@
 const passport = require('passport')
 const jwt = require('passport-jwt')
 
-// const { usersModel } = require('../models/users.model')
-const UserDaoMongo = require('../dao/mongo/usersDao.mongo.js')
 const { createHash, isValidPassword } = require('../utils/hashPassword.js')
 
 const JWTStrategy = jwt.Strategy
 const ExtractJWT  = jwt.ExtractJwt
-const userService   = new UserDaoMongo() 
 
 exports.initializePassport = () => {
     const cookieExtractor = req => {
