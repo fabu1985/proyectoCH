@@ -9,9 +9,8 @@ const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const { initializePassport } =  require('./config/passport.config.js');
 const { connectDB, configObject } = require('./config/index.js');
-
+const cors = require('cors')
 const appRouter = require('./routes/index.js')
-
 const app = express();
 const PORT = configObject.PORT
 
@@ -33,6 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(__dirname+'/public'));
 app.use(cookieParser('p@l@br@seCret@'));
+app.use(cors());
 
 initializePassport()
 app.use(passport.initialize())
