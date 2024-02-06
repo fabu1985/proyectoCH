@@ -1,5 +1,5 @@
-const Router = require('./router.js')
-const { usersClassModel } = require('../dao/mongo/models/ecommerce.model.js')
+const Router = require('../router.js')
+const { usersClassModel } = require('../../dao/mongo/models/ecommerce.model.js')
 
 class UsersRouter extends Router {
     init(){
