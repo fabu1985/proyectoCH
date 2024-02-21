@@ -8,7 +8,7 @@
         <button>Enviar</button>
     </form>
         <br>
-    <a href="http://localhost:4040/api/users/register">
+    <a href="http://localhost:8080/api/users/register">
         Registrarme
     </a>
 </center>
@@ -16,7 +16,7 @@
     const form = document.querySelector('#formularioLogin')
     form.addEventListener('submit', async function(ev){
         ev.preventDefault()
-        fecth('http://localhost:4040/api/sessions/login', {
+        fecth('http://localhost:8080/api/sessions/login', {
             method: 'POST',
             headers: {
                 "Content-type": "application/json",
