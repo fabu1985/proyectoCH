@@ -1,70 +1,67 @@
-const ProductDaoMongo = require("../dao/mongo/productsDaoMongo")
+const { productService } = require("../repositories");
+
 
 class ProductController {
-    constructor (){
-        this.productsService = new ProductDaoMongo()
-    }
-    getProducts = async (req, res) => {
-        try {
-          const products = await this.productsService.getProducts()
-          res.send({
-            status: 'success',
-            payload: products
-          })
-      } catch (error) {
-          console.log(error)
-      }
+    constructor(){
+        this.service = productService
     }
 
-    getProduct = async (req, res) =>{
+    getProducts = async (req, res) => {
         try {
-            const { pid } = req.params;
-            const foundedProduct = await this.productsService.find({_id: pid})
-            res.send(`Product wiht id: ${foundedProduct}`)
-          } catch (error) {
-            console.log(error)
+            const products = await this.service.getProducts()
+            res.send({status: 'success', payload: products})
+        } catch (error) {
+            res.status(500).send({message: error.message})
         }
-      }
-    
-    createProduct = async (req, res) =>{
+    }
+    getProduct = async (req, res) => {
         try {
-            const {title, category, description, price, thumbnail, code, stock, status} = req.body
-            const newProduct = await this.productsService.create({
-              title, category, description, price, thumbnail, code, stock, status
-            })
-            console.log(title, category, description, price, thumbnail, code, stock, status);
-            res.status(200).send({ 
-                status: 'success',
-                payload: newProduct        
-            })
+            const { pid } = req.params
+            const product = await this.service.getProduct({_id: pid})
+            res.send({status: 'success', payload: product})
         } catch (error) {
-          res.status(404).send('Check your data')
+            res.status(500).send({message: error.message})
         }
-      }
-    
-    updateProduct = async (req,res) => {
-        try {
-          const { pid } = req.params;
-          const userToReplace = req.body;
-          const result = await this.productsService.updateOne({_id: pid}, userToReplace);
-          res.status(200).send({ 
-            status: 'success',
-            payload: result 
-        })
-        } catch (error) {
-          res.status(404).send('Product couldn´t be updated');
-        }
-      }
-    
-    deleteProduct = async (req, res) => {
-        // sinc o async ?
-        try {const { pid } = req.params;
-      await this.productsService.deleteOne({_id: pid})
-        res.send(`Deleted product wiht id: ${pid}`)
-        } catch (error) {
-        res.status(404).send('Product couldn´t be deleted');
-      }
-      }
     }
     
-    module.exports = ProductController
+    createProduct = async (req, res) => {
+        try {
+            const {title, description, price, stock, thumbnail, category} = req.body
+            const result = await this.service.createProduct({
+                title,
+                description, 
+                price,
+                stock, 
+                category,
+                thumbnail
+            })
+            // validar la respuoesta de la base de datos
+            res.send({status: 'success', payload: result})
+        } catch (error) {
+            res.status(500).send({message: error.message})
+        }
+    }
+    updateProduct = async (req, res) => {
+        try {
+            const { pid } = req.params
+            const productToUpdate = req.body
+            const result = await this.service.updateProduct({_id: pid}, productToUpdate)
+            res.send({status: 'success', payload: result})
+        } catch (error) {
+            res.status(500).send({message: error.message})
+        }
+    }
+    deleteProduct = async (req, res) => {
+        try {
+            const { pid } = req.params
+            const result = await this.service.deleteProduct({_id: pid})
+            res.send({status: 'success', payload: result})
+        } catch (error) {
+            res.status(500).send({message: error.message})
+        }
+    }
+}
+
+module.exports = {
+    ProductController
+}

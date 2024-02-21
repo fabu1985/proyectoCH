@@ -4,10 +4,10 @@ class ProductManager {
     constructor() {
         this.path = "./mockDB/products.json";
         this.products = [];
-        this.loadProducts();
+        this.load();
     }
 
-    async loadProducts() {
+    async load() {
         try {
           const productsInJson = await fs.promises.readFile(this.path, "utf-8");
           this.products = JSON.parse(productsInJson);
@@ -16,7 +16,7 @@ class ProductManager {
         }
     }
 
-    async writeProductsToFile() {
+    async writeOnFile() {
         try {
           const productsJson = JSON.stringify(this.products, null, 2);
           await fs.promises.writeFile(this.path, productsJson);
@@ -25,7 +25,7 @@ class ProductManager {
         }
     }
 
-    async addProduct(title, description, price, thumbnail, code, stock, status, category) {
+    async create(title, description, price, thumbnail, code, stock, status, category) {
 
         let id = 0;
         for (let i = 0; i < this.products.length; i++) {
@@ -45,12 +45,12 @@ class ProductManager {
             }
             else{
                 this.products.push({id: id, title, description, price, thumbnail, code, stock, status, category});
-                await this.writeProductsToFile()
+                await this.writeOnFile()
             }
         }
     }
 
-    async getProducts() {
+    async getAll() {
 
         return this.products
     }
@@ -78,7 +78,16 @@ class ProductManager {
         
     }
 
-    async updateProduct(id, title, description, price, thumbnail, code, stock, status, category){
+    async getProductBy(filter) {
+        try {
+            const filteredProduct = await this.readFile();
+            return this.products.find(product => product.id === parseInt(filter));
+        } catch (error) {
+            return new Error(error);
+        }
+    }
+
+    async update(id, title, description, price, thumbnail, code, stock, status, category){
         const existingProductIndex = this.products.findIndex(product => product.id === parseInt(id));
 
     if (existingProductIndex !== -1) {
@@ -94,18 +103,18 @@ class ProductManager {
             category
         };
 
-        await this.writeProductsToFile();
+        await this.writeOnFile();
         }
         else{
             console.log("The product to be updated was not found")
         }
     }
 
-    async deleteProduct(id){
+    async delete(id){
         const indexToDelete = this.products.findIndex((product)=> product.id === parseInt(id));
         if(indexToDelete!==-1){
             this.products.splice(indexToDelete, 1);
-            await this.writeProductsToFile();
+            await this.writeOnFile();
         }else{
             console.log('No such product exists')
         }
