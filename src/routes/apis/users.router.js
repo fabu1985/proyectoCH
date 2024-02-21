@@ -1,16 +1,10 @@
 const { Router } = require('express')
-const { authentication } = require('../../middlewares/auth.middleware');
-const UserController = require('../../controllers/users.controller');
+const { authentication } = require('../../middlewares/auth.middleware')
+const UserController = require('../../controllers/users.controller')
 
 const router = Router()
-const {
-    getUsers,
-    createUser,
-    updateUser,
-    deleteUser
-} = new UserController()
+const userController = new UserController()
 
-//
 router.get('/register', async (req, res) =>{
     // sinc o async ?
     try {
@@ -31,15 +25,12 @@ router.get('/login', async (req, res) =>{
     }
 });
 
-router.get('/', getUsers );
+router.get('/', userController.getAll)
 
+router.post('/', userController.create)
 
-// POST localhost:8080  /api/users /
-router.post('/', createUser );
-// PUT localhost:8080  /api/users /:uid
-router.put('/:uid', updateUser )
+router.put('/:uid', userController.update)
 
-// DELETE localhost:8080  /api/users /:uid
-router.delete('/:uid', deleteUser)
+router.delete('/:uid', userController.delete)
 
 module.exports = router

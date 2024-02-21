@@ -5,15 +5,11 @@ class ProductDaoMongo {
         this.model = productsModel
     }
 
-    getProducts = async () => await this.model.find({});
-    
-    getProduct = async (pid) => await this.model.findById({_id: pid});
-        
-    createProduct = async (newProduct) => await this.model.create(newProduct);
-    
-    updateProduct = async (pid, productUpdate) => await this.model.findOneAndUpdate({_id: pid, productUpdate});
-    
-    deleteProduct = async (pid) => await this.model.findOneAndDelete({_id: pid});
+    get     = async () => this.model.find({})
+    getBy   = async filter => this.model.findOne(filter)
+    create  = async newProduct => this.model.create(newProduct)
+    update  = async (pid, productToUpdate) => this.model.findByIdAndUpdate({_id: pid}, productToUpdate, {new: true})
+    delete  = async (pid) => this.model.findByIdAndDelete({_id: pid}, {new: true})    
 }
 
 module.exports = ProductDaoMongo
