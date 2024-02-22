@@ -1,18 +1,18 @@
 const { Router } = require('express')
+const { ProductController } = require('../../controllers/products.controller')
 const { authentication } = require('../../middlewares/auth.middleware.js')
-const router = Router()
-const ProductController = require('../../controllers/products.controller.js');
 
+const router = Router()
 const productController = new ProductController()
 
-router.get('/', productController.getProducts)
+router.get('/', productController.getAll)
 
-router.get('/:pid', productController.getProduct )
+router.get('/:pid', productController.get)
 
-router.post('/', productController.createProduct);
+router.post('/', authentication, productController.create)
 
-router.put('/:pid', productController.updateProduct);
+router.put('/:pid', authentication,productController.update)
 
-router.delete('/:pid', productController.deleteProduct);
+router.delete('/:pid', authentication, productController.delete)
 
-module.exports = router;
+module.exports = router

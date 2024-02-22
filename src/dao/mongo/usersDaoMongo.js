@@ -2,20 +2,20 @@ const { usersModel } = require("./models/ecommerce.model");
 
 class UserDaoMongo {
     constructor() {
-        this.model = usersModel;
+        this.model  = usersModel;
     }
 
-    getUsers = async () => await this.model.find({});
+    getAll = async () => await this.model.find({});
     
-    getUser = async (uid) => await this.model.findOne({_id: uid});
+    get = async (uid) => await this.model.findOne({_id: uid});
     
-    getUserBy = async (filter) => await this.model.findOne(filter);
+    getBy = async (filter) => await this.model.findOne(filter);
     
-    createUser = async (newUser) => await this.model.create(newUser);
+    create = async (newUser) => await this.model.create(newUser);
     
-    updateUser = async (uid, userUpdate) => await this.model.findOneAndUpdate({_id: uid}, userUpdate);
+    update = async (uid, userToUpdate) => await this.model.findOneAndUpdate({_id: uid}, userToUpdate);
     
-    deleteUser = async (uid) => await this.model.findOneAndDelete({_id: uid});
+    delete = async (uid) => await this.model.findOneAndDelete({_id: uid});
 }
 
 module.exports = UserDaoMongo;

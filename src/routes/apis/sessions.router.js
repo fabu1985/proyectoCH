@@ -28,9 +28,7 @@ router.post('/register', async (req, res)=>{
     const token = createToken({id:result._id})
     res.cookie('token', token, {
         maxAge: 60 * 60 * 1000 * 24,
-        httpOnly: true,
-        //secure:true,
-        //sameSite: 'none'
+        httpOnly: true
       }).json({
         status: 'success',
         message: 'logged id'
@@ -49,7 +47,7 @@ router.post('/register', async (req, res)=>{
     }
     if (!isValidPassword (password, {password: user.password})) {
       return res.send('email o contraseña erroneas')
-  }
+    }
   const token = createToken({id:user._id, role: 'user'})
   res.cookie('token', token, {
     maxAge: 60 * 60 * 1000 * 24,
