@@ -1,4 +1,4 @@
-const { productService } = require("../repositories");
+const { productService } = require("../repositories/index.js");
 
 
 class ProductController {
@@ -6,28 +6,28 @@ class ProductController {
         this.service = productService
     }
 
-    getProducts = async (req, res) => {
+    getAll = async (req, res) => {
         try {
-            const products = await this.service.getProducts()
+            const products = await this.service.getAll()
             res.send({status: 'success', payload: products})
         } catch (error) {
             res.status(500).send({message: error.message})
         }
     }
-    getProduct = async (req, res) => {
+    get = async (req, res) => {
         try {
             const { pid } = req.params
-            const product = await this.service.getProduct({_id: pid})
+            const product = await this.service.get({_id: pid})
             res.send({status: 'success', payload: product})
         } catch (error) {
             res.status(500).send({message: error.message})
         }
     }
     
-    createProduct = async (req, res) => {
+    create = async (req, res) => {
         try {
             const {title, description, price, stock, thumbnail, category} = req.body
-            const result = await this.service.createProduct({
+            const result = await this.service.create({
                 title,
                 description, 
                 price,
@@ -41,20 +41,20 @@ class ProductController {
             res.status(500).send({message: error.message})
         }
     }
-    updateProduct = async (req, res) => {
+    update = async (req, res) => {
         try {
             const { pid } = req.params
             const productToUpdate = req.body
-            const result = await this.service.updateProduct({_id: pid}, productToUpdate)
+            const result = await this.service.update({_id: pid}, productToUpdate)
             res.send({status: 'success', payload: result})
         } catch (error) {
             res.status(500).send({message: error.message})
         }
     }
-    deleteProduct = async (req, res) => {
+    delete = async (req, res) => {
         try {
             const { pid } = req.params
-            const result = await this.service.deleteProduct({_id: pid})
+            const result = await this.service.delete({_id: pid})
             res.send({status: 'success', payload: result})
         } catch (error) {
             res.status(500).send({message: error.message})

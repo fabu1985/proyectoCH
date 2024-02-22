@@ -80,6 +80,29 @@ const usersSchema = Schema({
 usersSchema.plugin(mongoosePaginate)
 const usersModel = model(usersCollection, usersSchema)
 
+const ticketCollection = 'tickets';
+const ticketSchema = new Schema({
+    code: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    purchase_datetime: {
+        type: Date,
+        default: Date.now
+    },
+    amount: {
+        type: Number,
+        required: true,
+    },
+    purchaser: {
+        type: String,
+        required: true
+    }
+})
+
+const ticketModel = model(ticketCollection, ticketSchema);
+
 module.exports = {
-    messagesModel, productsModel, cartsModel, usersModel
+    messagesModel, productsModel, cartsModel, usersModel, ticketModel
 }
