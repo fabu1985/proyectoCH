@@ -5,11 +5,11 @@ class ProductRepository {
         this.dao = dao
     }
 
-    getProducts   = async () => await this.dao.get()
-    getProduct    = async (filter) => await this.dao.getBy(filter)
-    createProduct = async (newProduct) => await this.dao.create(newProduct)
-    updateProduct = async (pid, productToUpdate) => await this.dao.update(pid, productToUpdate)
-    deleteProduct = async (pid) => await this.dao.delete(pid)
+    getAll   = async () => await this.dao.get()
+    get    = async (filter) => await this.dao.getBy(filter)
+    create = async (newProduct) => await this.dao.create(newProduct)
+    update = async (pid, productToUpdate) => await this.dao.update(pid, productToUpdate)
+    delete = async (pid) => await this.dao.delete(pid)
 
 }
 

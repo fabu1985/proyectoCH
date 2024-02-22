@@ -33,7 +33,7 @@ class RouterCustom {
   }
   //policies es un array ['PUBLIC', 'USER', 'USER_PREMIUM', 'ADMIN']
   handlePolicies = policies => ( req, res, next ) => {
-    if(policies[0] == 'USER') return next()
+    if(policies[0] == 'user') return next()
     const authHeaders = req.headers.Authorization // Bearer tokenasdasdje
     if(!authHeaders) return res.status(401).send({status: 'error', error: 'Unauthorized'})
     const token = authHeaders.split('')[1]

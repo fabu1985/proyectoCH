@@ -4,7 +4,7 @@ const { authentication } = require('../../middlewares/auth.middleware.js')
 const router = Router();
 
 router
-    .get('/:cid', authentication, async (req,res)=>{
+    .get('/:cid', async (req,res)=>{
         const {cid} = req.params
 
         const cart = await cartsModel.findOne({_id: cid }) 
@@ -24,7 +24,7 @@ router
             status: 'success',
             payload: result
         })
-    });
+    })
 
     router.delete('/:cid', authentication, async (req, res) => {
       try {
@@ -34,7 +34,7 @@ router
       } catch (error) {
       res.status(404).send('Cart couldn´t be deleted');
     }
-    });
+    })
 
     router.put('/:cid', authentication, async (req,res) => {
       try {
@@ -48,6 +48,20 @@ router
       } catch (error) {
         res.status(404).send('Product couldn´t be updated');
       }
-    });
+    })
+
+    router.put('/:cid/purchase', authentication, async (req,res) => {
+      try {
+        const { cid } = req.params;
+        const productsToReplace = req.body;
+        const result = await cartsModel.updateOne({_id: cid}, productsToReplace);
+        res.status(200).send({ 
+          status: 'success',
+          payload: result 
+      })
+      } catch (error) {
+        res.status(404).send('Product couldn´t be updated');
+      }
+    })
 
 module.exports = router;
