@@ -1,4 +1,4 @@
-const { usersModel } = require("./models/ecommerce.model");
+const { usersModel } = require("./models/users.model");
 
 class UserDaoMongo {
     constructor() {

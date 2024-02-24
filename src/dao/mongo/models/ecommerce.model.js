@@ -9,50 +9,9 @@ const messagesSchema = Schema({
     message: String
 });
 
-const messagesModel = model(messagesCollection, messagesSchema);
+const messagesModel = model(messagesCollection, messagesSchema)
 
-// productos
-const productsCollection = 'products';
-const productsSchema = Schema({
-    title: {
-        type: String,
-        required: true
-    },
-    category: String,
-    description: String,
-    price: String,
-    thumbnail: String,
-    code: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    stock: String,
-    status: Boolean
-});
-
-productsSchema.plugin(mongoosePaginate);
-const productsModel = model(productsCollection, productsSchema);
-
-// del profe en clases
-const cartsSchema = new Schema({
-    products: {
-        type: [{
-            product: {
-                type: Schema.Types.ObjectId,
-                ref: 'products'
-            }
-        }]
-    }
-});
-cartsSchema.pre('findOne', function () {
-    this.populate('products.product')
-});
-cartsSchema.plugin(mongoosePaginate);
-
-const cartsModel = model('carts', cartsSchema)
-//// hasta aca del profe en clsaes para carts
-const usersCollection = 'Usuarios'
+/*const usersCollection = 'Usuarios'
 const usersSchema = Schema({
     first_name: {
         type: String,
@@ -78,7 +37,7 @@ const usersSchema = Schema({
     }
 });
 usersSchema.plugin(mongoosePaginate)
-const usersModel = model(usersCollection, usersSchema)
+const usersModel = model(usersCollection, usersSchema)*/
 
 const ticketCollection = 'tickets';
 const ticketSchema = new Schema({
@@ -104,5 +63,5 @@ const ticketSchema = new Schema({
 const ticketModel = model(ticketCollection, ticketSchema);
 
 module.exports = {
-    messagesModel, productsModel, cartsModel, usersModel, ticketModel
+    messagesModel, ticketModel
 }
