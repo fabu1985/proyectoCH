@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const { cartService, usersService, productService } = require('../repositories/index')
-const { ticketModel } = require('../dao/mongo/models/ecommerce.model')
+const { ticketModel } = require('../dao/mongo/models/ticket.model')
 
 class CartController {
     constructor(){
