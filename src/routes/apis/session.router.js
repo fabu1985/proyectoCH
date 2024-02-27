@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { authentication } = require('../../middlewares/auth.middleware');
+const { authentication } = require('../../middlewares/authorization.middleware');
 const { usersModel } = require('../../dao/mongo/models/users.model');
 const { createHash, isValidPassword } = require('../../utils/hashPassword');
 const passport = require('passport');

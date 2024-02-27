@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { productsModel } = require('../dao/mongo/models/products.model');
 const { usersModel } = require('../dao/mongo/models/users.model');
-const { authentication } = require('../middlewares/auth.middleware')
+const { authentication } = require('../middlewares/authorization.middleware')
 const router = Router()
 
 router.get('/', (req, res) => {
