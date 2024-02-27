@@ -5,7 +5,7 @@ const productsRouter = require('./apis/products.router.js')
 const pruebasRouter = require('./apis/pruebas.router.js')
 const viewsRouter = require('./views.router.js')
 const ordersRouter = require('./apis/orders.router.js')
-const sessionsRouter = require('./apis/sessions.router.js')
+const sessionsRouter = require('./apis/session.router.js')
 const { uploader } = require('../utils/uploader.js')
 
 const router = Router()

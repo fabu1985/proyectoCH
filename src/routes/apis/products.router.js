@@ -9,10 +9,10 @@ router.get('/', productController.getAll)
 
 router.get('/:pid', productController.get)
 
-router.post('/', authentication, productController.create)
+router.post('/', productController.create)
 
-router.put('/:pid', authentication,productController.update)
+router.put('/:pid',productController.update)
 
-router.delete('/:pid', authentication, productController.delete)
+router.delete('/:pid', productController.delete)
 
 module.exports = router
