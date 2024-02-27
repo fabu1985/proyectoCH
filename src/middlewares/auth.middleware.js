@@ -1,11 +1,27 @@
-function authentication(req, res, next) {
-    // pedir el user a la base de datos 
-    if( !req.session?.user?.admin ) {
-        return res.status(401).send('error de autenticación')
+const passport = require('passport')
+/**
+ * The function `isAuthenticated` checks if a user is authenticated based on the session and returns an
+ * unauthorized message if not.
+ */
+function isAuthenticated(req, res, next) {
+    if (req.session && req.session.user) {
+        next()
+    } else {
+        res.status(401).json({ message: 'Unauthorized' })
     }
-    next()
+}
+
+function authenticateUser(req, res, next) {
+    passport.authenticate('jwt', { session: false }, (err, user, info) => {
+        if (err) {
+            return next(err)
+        }
+        req.user = user
+        next()
+    })(req, res, next)
 }
 
 module.exports = {
-    authentication
+    isAuthenticated,
+    authenticateUser
 }
