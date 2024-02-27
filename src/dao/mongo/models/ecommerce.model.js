@@ -1,5 +1,6 @@
 const {Schema, model} = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
+
 const messagesCollection = 'messages';
 const messagesSchema = Schema({
     user: {
@@ -8,77 +9,7 @@ const messagesSchema = Schema({
     },
     message: String
 });
-
-const messagesModel = model(messagesCollection, messagesSchema);
-
-// productos
-const productsCollection = 'products';
-const productsSchema = Schema({
-    title: {
-        type: String,
-        required: true
-    },
-    category: String,
-    description: String,
-    price: String,
-    thumbnail: String,
-    code: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    stock: String,
-    status: Boolean
-});
-
-productsSchema.plugin(mongoosePaginate);
-const productsModel = model(productsCollection, productsSchema);
-
-// del profe en clases
-const cartsSchema = new Schema({
-    products: {
-        type: [{
-            product: {
-                type: Schema.Types.ObjectId,
-                ref: 'products'
-            }
-        }]
-    }
-});
-cartsSchema.pre('findOne', function () {
-    this.populate('products.product')
-});
-cartsSchema.plugin(mongoosePaginate);
-
-const cartsModel = model('carts', cartsSchema)
-//// hasta aca del profe en clsaes para carts
-const usersCollection = 'Usuarios'
-const usersSchema = Schema({
-    first_name: {
-        type: String,
-        required: true
-    },
-    last_name: String,
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String
-    },
-    role: {
-        type: String,
-        enum: ['user', 'user_premium', 'admin'],
-        default: 'user'
-    },
-    atCreated: {
-        type: Date,
-        default: Date()
-    }
-});
-usersSchema.plugin(mongoosePaginate)
-const usersModel = model(usersCollection, usersSchema)
+const messagesModel = model(messagesCollection, messagesSchema)
 
 const ticketCollection = 'tickets';
 const ticketSchema = new Schema({
@@ -104,5 +35,5 @@ const ticketSchema = new Schema({
 const ticketModel = model(ticketCollection, ticketSchema);
 
 module.exports = {
-    messagesModel, productsModel, cartsModel, usersModel, ticketModel
+    messagesModel, ticketModel
 }

@@ -1,67 +1,33 @@
 const { Router } = require('express');
-const { cartsModel, productsModel } = require('../../dao/mongo/models/ecommerce.model.js')
-const { authentication } = require('../../middlewares/auth.middleware.js')
+const { cartsModel } = require('../../dao/mongo/models/cart.model.js')
+const { authenticateUser, isAuthenticated } = require('../../middlewares/auth.middleware')
+const CartController = require('../../controllers/carts.controller')
+
+
 const router = Router();
+const {
+  getCarts,
+  getCartById,
+  createCart,
+  addProductToCart,
+  removeProductFromCart,
+  updateCart,
+  updateProductQuantity,
+  deleteAllProducts,
+  addProductToCart2,
+  purchaseCart,
+} = new CartController()
 
 router
-    .get('/:cid', async (req,res)=>{
-        const {cid} = req.params
+.get('/', getCarts)
+.post('/', createCart)
+.get('/:cid', getCartById)
+.post('/:cid/product/:pid', addProductToCart)
+.delete('/:cid/product/:pid', removeProductFromCart)
+.put('/:cid', updateCart)
+.put('/:cid/products/:pid', updateProductQuantity)
+.delete('/:cid', deleteAllProducts)
+.post('/:pid', isAuthenticated, addProductToCart2)
+.post('/:cid/purchase', isAuthenticated, purchaseCart)
 
-        const cart = await cartsModel.findOne({_id: cid }) 
-
-        res.send({
-            status: 'success',
-            payload: cart        
-        })
-    })
-    .post('/', authentication, async (req,res)=>{
-        const newCart = req.body
-
-        const result = await cartsModel.create(newCart)
-
-        
-        res.send({
-            status: 'success',
-            payload: result
-        })
-    })
-
-    router.delete('/:cid', authentication, async (req, res) => {
-      try {
-        const { cid } = req.params;
-        await cartsModel.deleteOne({_id: cid})
-        res.send(`Deleted Cart wiht id: ${cid}`)
-      } catch (error) {
-      res.status(404).send('Cart couldn´t be deleted');
-    }
-    })
-
-    router.put('/:cid', authentication, async (req,res) => {
-      try {
-        const { cid } = req.params;
-        const productsToReplace = req.body;
-        const result = await cartsModel.updateOne({_id: cid}, productsToReplace);
-        res.status(200).send({ 
-          status: 'success',
-          payload: result 
-      })
-      } catch (error) {
-        res.status(404).send('Product couldn´t be updated');
-      }
-    })
-
-    router.put('/:cid/purchase', authentication, async (req,res) => {
-      try {
-        const { cid } = req.params;
-        const productsToReplace = req.body;
-        const result = await cartsModel.updateOne({_id: cid}, productsToReplace);
-        res.status(200).send({ 
-          status: 'success',
-          payload: result 
-      })
-      } catch (error) {
-        res.status(404).send('Product couldn´t be updated');
-      }
-    })
-
-module.exports = router;
+module.exports = router
