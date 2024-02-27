@@ -5,16 +5,16 @@ const productsSchema = Schema({
         type: String,
         required: true
     },
-    category: String,
     description: String,
     price: String,
+    stock: String,
     thumbnail: String,
+    category: String,
     code: {
         type: String,
         required: true,
         unique: true
     },
-    stock: String,
     status: Boolean
 });
 

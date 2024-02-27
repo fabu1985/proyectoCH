@@ -1,19 +1,25 @@
-const { configObject: {persistence} } = require('../config/index.js')
+const { configObject: {persistence} } = require('../config/index')
 let UserDao
 let ProductDao
+let CartDao
+let MessageDao
 
 
 switch (persistence) {
     case 'MONGO':
-        const UserDaoMongo = require('./mongo/usersDaoMongo.js')
+        const UserDaoMongo = require('./mongo/usersDaoMongo')
         UserDao = UserDaoMongo
-        const ProductDaoMongo = require('./mongo/productsDaoMongo.js')
+        const ProductDaoMongo = require('./mongo/productsDaoMongo')
         ProductDao = ProductDaoMongo
+        const CartDaoMongo = require('./mongo/cartDaoMongo')
+        CartDao = CartDaoMongo
+        const MessageDaoMongo = require('./mongo/messageDaoMongo')
+        MessageDao = MessageDaoMongo
         break;
     case 'FILE':
-        const UserDaoFile = require('./fileSystem/productManager.js')
+        const UserDaoFile = require('./fileSystem/productManager')
         UserDao = UserDaoFile
-        const ProductDaoFile = require('./mongo/productsDaoMongo.js')
+        const ProductDaoFile = require('./mongo/productsDaoMongo')
         ProductDao = ProductDaoFile
         break;
     default:
@@ -22,5 +28,7 @@ switch (persistence) {
 
 module.exports = {
     ProductDao,
-    UserDao
+    UserDao,
+    MessageDao,
+    CartDao
 }
