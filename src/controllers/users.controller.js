@@ -1,10 +1,12 @@
 const { usersService } = require("../repositories/index.js")
+const CustomError = require("../services/errors/CustomError.js")
+const { EErrors } = require("../services/errors/enum.js")
+const { generateUserErrorInfo } = require("../services/errors/generateErrorInfo.js")
 
 class UserController {
     constructor (){
         this.usersService = usersService
     }
-
         getAll = async (req, res) =>{
         // sinc o async ?
         try {
@@ -16,10 +18,20 @@ class UserController {
         }
     }
     
-    create = async (req, res) =>{
+
+    create = async (req, res, next) =>{
         try {
             const {first_name, last_name, email, password, role, atCreated} = req.body
             // validación
+            if(!first_name || !last_name || !email){
+                CustomError.createError({
+                    name: 'Error trying to create an User',
+                    cause: generateUserErrorInfo({first_name, last_name, email}),
+                    message: 'Make sure that you put all the required data',
+                    code: EErrors.INVALID_TYPES_ERROR
+
+                })
+            }
             const newUser = {first_name, last_name, email, password, role, atCreated}
             console.log(newUser)
             const result = await this.usersService.create(newUser)
@@ -28,21 +40,33 @@ class UserController {
                 payload: result        
             })
         } catch (error) {
-            console.log(error)
+            next(error)
         }
         
     }
     
-    update = async (req, res) =>{
-    
+    update = async (req, res, next) =>{
+        try {
         const { uid } = req.params
-        const userToReplace = req.body
+        const {first_name, last_name, email} = req.body
         // venga el id
-        const result = await this.usersService.update({_id: uid}, userToReplace)
+        const result = await this.usersService.update({_id: uid}, {first_name, last_name, email})
+        if(!first_name || !last_name || !email){
+            CustomError.createError({
+                name: 'Error trying to update an User',
+                cause: generateUserErrorInfo({first_name, last_name, email}),
+                message: 'Make sure that you put all the required data',
+                code: EErrors.INVALID_TYPES_ERROR
+
+            })
+        }
         res.status(201).send({ 
             status: 'success',
             payload: result 
-        })
+        })}
+        catch (error) {
+            next(error)
+        }
     }
     
     delete = async  (req, res)=> {

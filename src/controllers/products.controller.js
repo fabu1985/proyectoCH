@@ -1,4 +1,7 @@
 const { productService } = require("../repositories/index.js");
+const CustomError = require("../services/errors/CustomError.js");
+const { EErrors } = require("../services/errors/enum.js");
+const { generateProductErrorInfo } = require("../services/errors/generateErrorInfo.js");
 
 
 class ProductController {
@@ -28,9 +31,17 @@ class ProductController {
         }
     }
     
-    create = async (req, res) => {
+    create = async (req, res, next) => {
         try {
             const {title, description, price, stock, thumbnail, category, code, status} = req.body
+            if(!title || !description  ||  !price  ||  !stock  ||  !thumbnail  ||  !category  ||  !code  ||  !status){
+                CustomError.createError({
+                    name: 'Error trying to create a Product',
+                    cause: generateProductErrorInfo(title),
+                    message: 'Make sure that you put all the required data',
+                    code: EErrors.INVALID_TYPES_ERROR
+                })
+            }
             const result = await this.service.create({
                 title,
                 description, 
@@ -44,31 +55,38 @@ class ProductController {
             // validar la respuoesta de la base de datos
             res.send({status: 'success', payload: result})
         } catch (error) {
-            res.status(500).send({message: error.message})
+            next(error)
         }
     }
-    update = async (req, res) => {
+    update = async (req, res, next) => {
         try{
             const pid = req.params.pid
             const {title, description, price, thumbnail, code, stock, status, category} = req.body
+            if(!title || !description  ||  !price  ||  !stock  ||  !thumbnail  ||  !category  ||  !code  ||  !status){
+                CustomError.createError({
+                    name: 'Error trying to update a Product',
+                    cause: generateProductErrorInfo(title),
+                    message: 'Make sure that you put all the required data',
+                    code: EErrors.INVALID_TYPES_ERROR
+                })
+            }
             await this.productService.update(pid, title, description, price, thumbnail, code, stock, status, category)
             res.json({
                 status: 'success',
                 message: 'Product updated successfully',
             })
-        }catch(error){
-            console.log(error)
-            res.status(500).send('server error')
+        }catch (error) {
+            next(error)
         }
     }
 
-    delete = async (req, res) => {
+    delete = async (req, res, next) => {
         try {
             const { pid } = req.params
             const result = await this.service.delete({_id: pid})
             res.send({status: 'success', payload: result})
         } catch (error) {
-            res.status(500).send({message: error.message})
+            next(error)
         }
     }
 }

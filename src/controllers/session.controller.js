@@ -8,34 +8,45 @@ const { createToken } = require('../utils/jwt')
         this.usersService = usersService
     }
 
-    register = async (req,res) =>{
-        const { first_name, last_name, email , password } = req.body
-        if (first_name ==='' || password === "" || email === '' ) {
-            return res.send('completar datos requeridos')
+    register = async (req,res,next) =>{
+            try {
+                const { first_name, last_name, email , password } = req.body
+            if (first_name ==='' || password === "" || email === '' ) {
+                // return res.send('completar datos requeridos')
+                CustomError.createError({
+                    name: 'Error trying to Register a User',
+                    cause: generateUserManagementErrorInfo(first_name, email),
+                    message: 'Make sure that you put all the required data',
+                    code: EErrors.INVALID_TYPES_ERROR
+                })
+            }
+            const userFound = await this.usersService.get({email})
+            if (userFound) {
+                return res.send({status: 'error', error: 'existant user'})
+            }
+            const newUser = {
+                first_name,
+                last_name,
+                email,
+                password: createHash(password)
+            }
+            const result = await this.usersService.create(newUser)
+            const token = createToken({id:result._id})
+            res.cookie('token', token, {
+                maxAge: 60 * 60 * 1000 * 24,
+                httpOnly: true
+              }).json({
+                status: 'success',
+                message: 'logged id'
+               })
+            } catch (error) {
+                next(error)
+            }
         }
-        const userFound = await this.usersService.get({email})
-        if (userFound) {
-            return res.send({status: 'error', error: 'existant user'})
-        }
-        const newUser = {
-            first_name,
-            last_name,
-            email,
-            password: createHash(password)
-        }
-        const result = await this.usersService.create(newUser)
-        const token = createToken({id:result._id})
-        res.cookie('token', token, {
-            maxAge: 60 * 60 * 1000 * 24,
-            httpOnly: true
-          }).json({
-            status: 'success',
-            message: 'logged id'
-           })
-    }
 
-    login = async (req,res) => {
-        const { email , password } = req.body
+    login = async (req,res, next) => {
+try {
+    const { email , password } = req.body
         // simulando consulta a la base de datos
         if (email === '' || password === '') {
             return res.send('todos los campos son obligatorios')
@@ -62,7 +73,10 @@ const { createToken } = require('../utils/jwt')
             last_name: user.last_name
         }
        })
-    }
+} catch (error) {
+    next(error)
+}
+}
 
     logout = async (req,res) =>{
           /*req.session.destroy((err) => {

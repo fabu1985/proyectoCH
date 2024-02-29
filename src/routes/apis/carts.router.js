@@ -15,7 +15,7 @@ const {
   updateProductQuantity,
   deleteAllProducts,
   addProductToCart2,
-  purchaseCart,
+  purchaseCart
 } = new CartController()
 
 router
