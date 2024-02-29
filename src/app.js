@@ -10,7 +10,8 @@ const passport = require('passport');
 const { initializePassport } =  require('./config/passport.config.js');
 const { connectDB, configObject } = require('./config/index.js');
 const cors = require('cors')
-const appRouter = require('./routes/index.js')
+const appRouter = require('./routes/index.js');
+const { handleError } = require('./middlewares/error/handleErrors.js');
 const app = express();
 const PORT = configObject.PORT
 
@@ -38,6 +39,13 @@ initializePassport()
 app.use(passport.initialize())
 
 app.use(appRouter)
+/* 
+llamo al handle errors debajo
+app.use(( err, req, res, next)=>{
+  console.error(err.stack)
+  res.status(500).send('error de server')
+});*/
+app.use(handleError)
 
 //configuracion de handlebars (motor de plantilla HANDLEBARS)
 app.engine('hbs', handlebars.engine({
@@ -47,10 +55,7 @@ app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 connectDB()
 
-app.use(( err, req, res, next)=>{
-  console.error(err.stack)
-  res.status(500).send('error de server')
-});
+
 
 //server express http
 const serverHttp = app.listen(PORT,err => {

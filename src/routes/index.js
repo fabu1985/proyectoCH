@@ -22,6 +22,19 @@ router.use('/views', viewsRouter);
 router.use('/api/orders', ordersRouter);
 router.use('/api/sessions', sessionsRouter);
 //router.use('/api/usersClass', userClassRouter.getRouter());
+
+router.use('*', (req,res) => {
+  res.status(404).send('not found')
+})
+
+
+
+/* esta en el hanleerrror del middleware
+router.use(( err, req, res, next) => {
+  console.error(err)
+  res.status(500).send(`Error de tu servidor ${err}`)
+})*/
+
 router.post('/uploader', uploader.single('myFile'), (req, res)=>{
 
     res.send('Imagen subida')
