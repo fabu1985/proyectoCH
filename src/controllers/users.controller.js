@@ -1,7 +1,7 @@
 const { usersService } = require("../repositories/index.js")
 const CustomError = require("../services/errors/CustomError.js")
 const { EErrors } = require("../services/errors/enum.js")
-const { generateUserErrorInfo } = require("../services/errors/generateUserErrorInfo.js")
+const { generateUserErrorInfo } = require("../services/errors/generateErrorInfo.js")
 
 class UserController {
     constructor (){
@@ -25,9 +25,9 @@ class UserController {
             // validación
             if(!first_name || !last_name || !email){
                 CustomError.createError({
-                    name: 'user creation errror',
+                    name: 'Error trying to create an User',
                     cause: generateUserErrorInfo({first_name, last_name, email}),
-                    message: 'Error probando la creacion del usuario',
+                    message: 'Make sure that you put all the required data',
                     code: EErrors.INVALID_TYPES_ERROR
 
                 })
@@ -45,16 +45,28 @@ class UserController {
         
     }
     
-    update = async (req, res) =>{
-    
+    update = async (req, res, next) =>{
+        try {
         const { uid } = req.params
-        const userToReplace = req.body
+        const {first_name, last_name, email} = req.body
         // venga el id
-        const result = await this.usersService.update({_id: uid}, userToReplace)
+        const result = await this.usersService.update({_id: uid}, {first_name, last_name, email})
+        if(!first_name || !last_name || !email){
+            CustomError.createError({
+                name: 'Error trying to update an User',
+                cause: generateUserErrorInfo({first_name, last_name, email}),
+                message: 'Make sure that you put all the required data',
+                code: EErrors.INVALID_TYPES_ERROR
+
+            })
+        }
         res.status(201).send({ 
             status: 'success',
             payload: result 
-        })
+        })}
+        catch (error) {
+            next(error)
+        }
     }
     
     delete = async  (req, res)=> {
