@@ -1,10 +1,12 @@
 const { usersService } = require("../repositories/index.js")
+const CustomError = require("../services/errors/CustomError.js")
+const { EErrors } = require("../services/errors/enum.js")
+const { generateUserErrorInfo } = require("../services/errors/generateUserErrorInfo.js")
 
 class UserController {
     constructor (){
         this.usersService = usersService
     }
-
         getAll = async (req, res) =>{
         // sinc o async ?
         try {
@@ -16,10 +18,20 @@ class UserController {
         }
     }
     
-    create = async (req, res) =>{
+
+    create = async (req, res, next) =>{
         try {
             const {first_name, last_name, email, password, role, atCreated} = req.body
             // validación
+            if(!first_name || !last_name || !email){
+                CustomError.createError({
+                    name: 'user creation errror',
+                    cause: generateUserErrorInfo({first_name, last_name, email}),
+                    message: 'Error probando la creacion del usuario',
+                    code: EErrors.INVALID_TYPES_ERROR
+
+                })
+            }
             const newUser = {first_name, last_name, email, password, role, atCreated}
             console.log(newUser)
             const result = await this.usersService.create(newUser)
@@ -28,7 +40,7 @@ class UserController {
                 payload: result        
             })
         } catch (error) {
-            console.log(error)
+            next(error)
         }
         
     }
