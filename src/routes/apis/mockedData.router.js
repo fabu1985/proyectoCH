@@ -23,16 +23,18 @@ for (let i = 0; i < 5e4; i++) {
 
   res.send(string)
 })
-/*
+
 const generateProduct = () => {
   return {
     title: faker.commerce.productName(),
-    price: faker.commerce.price(),
-    department: faker.commerce.department(),
-    stock: faker.string.numeric(),
     description: faker.commerce.productDescription(),
-    id: faker.database.mongodbObjectId(),
-    image: faker.image.url(),
+    price: faker.commerce.price(),
+    stock: faker.string.numeric(),
+    thumbnail: faker.image.url(),
+    category: faker.commerce.productMaterial(),
+    code: faker.string.numeric(),
+    status: faker.string.alphanumeric(),
+    id: faker.database.mongodbObjectId()
   }
 }
 
@@ -56,7 +58,7 @@ const generateUser = () => {
   }
 }
 
-router.get('/mockingproducts', (req, res) => {
+router.get('/mockingUsersAndProducts', (req, res) => {
   let users = []
 
 for (let i = 0; i < 100; i++) {
@@ -66,6 +68,16 @@ for (let i = 0; i < 100; i++) {
   res.send({
     status: 'success',
     payload: users
+  })
+})
+
+router.get('/mockingproducts', (req, res) => {
+  let products = []
+  for (let i = 0; i < 100; i++) {
+    products.push(generateProduct())
+  }
+  res.send({
+    products
   })
 })
 
@@ -101,6 +113,6 @@ const html    = `<div>
 </div>` 
 sendMail(to, subject, html)
     res.send('mail enviado')
-})*/
+})
 
 module.exports = router
