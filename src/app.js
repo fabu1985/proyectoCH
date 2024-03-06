@@ -12,9 +12,11 @@ const { connectDB, configObject } = require('./config/index.js');
 const cors = require('cors')
 const appRouter = require('./routes/index.js');
 const { handleError } = require('./middlewares/error/handleErrors.js');
+const { sumaNumeros } = require('proyectosumafabianadiazposleman');
 const app = express();
 const PORT = configObject.PORT
 
+console.log(sumaNumeros(1,2,3,4,5))
 app.use(session({
   store: MongoStore.create({
     mongoUrl: 'mongodb+srv://fabianadiazp:FABU1985@cluster0.qn3ysof.mongodb.net/ecommerce?retryWrites=true&w=majority',
