@@ -7,6 +7,11 @@ const productController = new ProductController()
 
 router.get('/', productController.getAll)
 
+router.get('/logger', (req, res) => {
+    req.logger.warn('esto es un warning');
+    res.send('logger')
+})
+
 router.get('/:pid', productController.get)
 
 router.post('/', productController.create)

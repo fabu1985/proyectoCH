@@ -13,6 +13,7 @@ const cors = require('cors')
 const appRouter = require('./routes/index.js');
 const { handleError } = require('./middlewares/error/handleErrors.js');
 const { sumaNumeros } = require('proyectosumafabianadiazposleman');
+const { addLogger, logger } = require('./utils/logger.js');
 const app = express();
 const PORT = configObject.PORT
 
@@ -40,16 +41,10 @@ app.use(cors());
 initializePassport()
 app.use(passport.initialize())
 
+app.use(addLogger)
 app.use(appRouter)
-/* 
-llamo al handle errors debajo
-app.use(( err, req, res, next)=>{
-  console.error(err.stack)
-  res.status(500).send('error de server')
-});*/
 app.use(handleError)
 
-//configuracion de handlebars (motor de plantilla HANDLEBARS)
 app.engine('hbs', handlebars.engine({
   extname: '.hbs'
 }));
@@ -57,12 +52,10 @@ app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 connectDB()
 
-
-
 //server express http
 const serverHttp = app.listen(PORT,err => {
-  if (err) console.log(err)
-  console.log(`Server is running on http://localhost:${PORT}`)
+  if (err)
+  logger.info(`Server is running on http://localhost:${PORT}`)
 });
 
 // server socket
@@ -71,7 +64,7 @@ const io = new Server(serverHttp);
 let messagesArray = []
 
 io.on('connection', socket => {
-  console.log('nuevo cliente conectado');
+  logger.error('nuevo cliente conectado');
 
   socket.on('message', data => {
     messagesArray.push(data);

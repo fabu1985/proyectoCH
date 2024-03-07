@@ -1,6 +1,7 @@
 const { createHash, isValidPassword } = require('../utils/hashPassword')
 const { cartService, usersService } = require('../repositories/index')
 const { createToken } = require('../utils/jwt')
+const { logger } = require('../utils/logger')
 
  class SessionController {
     constructor(){
@@ -87,14 +88,14 @@ try {
         try{
             req.session.destroy((err) =>{
                 if(err){
-                    console.error('Error during session destruction:', err)
+                    logger.error('Error during session destruction:', err)
                     return res.status(500).send({ status: 'error', error: 'Internal Server Error' })
                 }
     
                 res.redirect('/login')
             })
         }catch(error) {
-            console.error('Error during logout:', error)
+            logger.error('Error during logout:', error)
             res.status(500).send({ status: 'error', error: 'Internal Server Error' })
         }
     }

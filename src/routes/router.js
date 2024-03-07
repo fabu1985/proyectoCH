@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const jwt = require('jsonwebtoken');
+const { logger } = require('../utils/logger');
 
 class RouterCustom {
   constructor(){
@@ -26,7 +27,7 @@ class RouterCustom {
       try {
         await callback.apply(this, params)
       } catch(error) {
-        console.log(error)
+        logger.error(error)
         params[1].status(500).send(error) // este es el response
       }
     })

@@ -1,11 +1,13 @@
 //console.log('bienvenido al script de index');
 
+const { logger } = require("../../utils/logger");
+
 const socket = io();
 
 socket.emit('recibirMensajeClienteInventoYo', 'estoy usando socket y soy el cliente')
 
 socket.on('enviar-mensajes-cliente', data => {
-    console.log(data)
+    logger.info(data)
 });
 
 let user

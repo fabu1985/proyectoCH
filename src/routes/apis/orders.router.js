@@ -17,9 +17,6 @@ router.get('/', authentication, async (req, res) =>{
         {$merge: {into: 'reports'}}
     ])
         res.send(orders)
-  /*} catch (error) {
-    console.log(error)
-}*/
 })
 
 module.exports = router
