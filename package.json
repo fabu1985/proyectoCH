@@ -38,7 +38,8 @@
     "socket.io": "^4.7.2",
     "twilio": "^4.22.0",
     "validate-date": "^2.1.0",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "winston": "^3.12.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
