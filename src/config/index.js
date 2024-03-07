@@ -1,10 +1,11 @@
 const { connect } = require("mongoose")
 const dotenv = require('dotenv')
 const { program } = require("../utils/commander")
+const { logger } = require("../utils/logger")
 
 
 const { mode } = program.opts()
-console.log('mode config: ', mode)
+logger.info('mode config: ', mode)
 dotenv.config({
     path: mode == 'production' ? './.env.production' : './.env.development'
 })
@@ -26,9 +27,9 @@ const configObject = {
 const connectDB = async () => {
     try {
         await connect(process.env.MONGO_URL)
-        console.log('Base de datos conectada')   
+        logger.info('Base de datos conectada')   
     } catch (err) {
-        console.log(err)
+        logger.info(err)
     }
 } 
 

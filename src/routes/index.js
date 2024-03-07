@@ -7,6 +7,7 @@ const viewsRouter = require('./views.router.js')
 const ordersRouter = require('./apis/orders.router.js')
 const sessionsRouter = require('./apis/session.router.js')
 const { uploader } = require('../utils/uploader.js')
+const loggerRouter = require('./apis/logger.router.js')
 
 const router = Router()
 
@@ -21,6 +22,7 @@ router.use('/api/users', userRouter)
 router.use('/views', viewsRouter);
 router.use('/api/orders', ordersRouter);
 router.use('/api/sessions', sessionsRouter);
+router.use('/api/logger', loggerRouter);
 //router.use('/api/usersClass', userClassRouter.getRouter());
 
 router.use('*', (req,res) => {

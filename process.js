@@ -1,8 +1,10 @@
-console.log(process.cwd())
-console.log(process.pid)
-console.log(process.memoryUsage())
-console.log(process.version)
-console.log('arg:',process.argv)
+const { logger } = require("./src/utils/logger")
 
-console.log(process.argv.slice(2))
+logger.info(process.cwd())
+logger.info(process.pid)
+logger.info(process.memoryUsage())
+logger.info(process.version)
+logger.info('arg:',process.argv)
+
+logger.info(process.argv.slice(2))
 

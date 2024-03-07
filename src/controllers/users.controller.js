@@ -2,6 +2,7 @@ const { usersService } = require("../repositories/index.js")
 const CustomError = require("../services/errors/CustomError.js")
 const { EErrors } = require("../services/errors/enum.js")
 const { generateUserErrorInfo } = require("../services/errors/generateErrorInfo.js")
+const { logger } = require("../utils/logger.js")
 
 class UserController {
     constructor (){
@@ -14,7 +15,7 @@ class UserController {
             res.send(users)
             
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
     
@@ -33,7 +34,7 @@ class UserController {
                 })
             }
             const newUser = {first_name, last_name, email, password, role, atCreated}
-            console.log(newUser)
+            logger.info(newUser)
             const result = await this.usersService.create(newUser)
             res.status(201).send({ 
                 status: 'success',
