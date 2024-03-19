@@ -34,4 +34,6 @@ router.put('/:uid', userController.update)
 
 router.delete('/:uid', userController.delete)
 
+router.put('/premium/:uid', userController.changeRole)
+
 module.exports = router

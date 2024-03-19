@@ -79,6 +79,34 @@ class UserController {
             payload: result 
         })
     }
-    }
     
-    module.exports = UserController
+      // cambio de reoles para Desafio Complementario calse 37
+  changeRole = async ( req, res) => {
+    const {uid} = req.params
+    try {
+      const user = await this.service.getBy({_id: uid});
+      if (!user) return res.sendNotFound('Usuario no encontrado');
+
+      if (user.role == 'user') {
+        user.role = 'premium';
+        user.last_updated = new Date();
+      } else if (user.role == 'premium') {
+        user.role = 'user'
+        user.last_updated = new Date();
+      }
+      const newuser = await this.service.update({_id: uid}, user);
+      res.sendSuccess({
+        _id: newuser._id,
+        first_name: newuser.first_name,
+        last_name: newuser.last_name,
+        email: newuser.email,
+        role: newuser.role,
+        last_updated: newuser.last_updated
+      });
+    } catch (error) {
+      req.logger.error(error);
+      res.sendCatchError(error, "An error occurred in the API request");
+    }
+  }
+}
+  module.exports = UserController
