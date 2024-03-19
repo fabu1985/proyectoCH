@@ -32,7 +32,7 @@ class RouterCustom {
       }
     })
   }
-  //policies es un array ['PUBLIC', 'USER', 'USER_PREMIUM', 'ADMIN']
+  //policies es un array ['PUBLIC', 'USER', 'PREMIUM', 'ADMIN']
   handlePolicies = policies => ( req, res, next ) => {
     if(policies[0] == 'user') return next()
     const authHeaders = req.headers.Authorization // Bearer tokenasdasdje
