@@ -33,8 +33,8 @@ class ProductController {
     
     create = async (req, res, next) => {
         try {
-            const {title, description, price, stock, thumbnail, category, code, status} = req.body
-            if(!title || !description  ||  !price  ||  !stock  ||  !thumbnail  ||  !category  ||  !code  ||  !status){
+            const {title, description, price, stock, thumbnail, category, code, status, owner} = req.body
+            if(!title || !description  ||  !price  ||  !stock  ||  !thumbnail  ||  !category  ||  !code  ||  !status ||  !owner){
                 CustomError.createError({
                     name: 'Error trying to create a Product',
                     cause: generateProductErrorInfo(title),
@@ -50,7 +50,8 @@ class ProductController {
                 thumbnail,
                 category,
                 code,
-                status
+                status,
+                owner
             })
             // validar la respuoesta de la base de datos
             res.send({status: 'success', payload: result})
@@ -61,8 +62,8 @@ class ProductController {
     update = async (req, res, next) => {
         try{
             const pid = req.params.pid
-            const {title, description, price, thumbnail, code, stock, status, category} = req.body
-            if(!title || !description  ||  !price  ||  !stock  ||  !thumbnail  ||  !category  ||  !code  ||  !status){
+            const {title, description, price, thumbnail, code, stock, status, category, owner} = req.body
+            if(!title || !description  ||  !price  ||  !stock  ||  !thumbnail  ||  !category  ||  !code  ||  !status  ||  !owner){
                 CustomError.createError({
                     name: 'Error trying to update a Product',
                     cause: generateProductErrorInfo(title),
@@ -70,7 +71,7 @@ class ProductController {
                     code: EErrors.INVALID_TYPES_ERROR
                 })
             }
-            await this.productService.update(pid, title, description, price, thumbnail, code, stock, status, category)
+            await this.productService.update(pid, title, description, price, thumbnail, code, stock, status, category, owner)
             res.json({
                 status: 'success',
                 message: 'Product updated successfully',

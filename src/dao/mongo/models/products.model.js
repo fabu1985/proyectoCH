@@ -15,7 +15,11 @@ const productsSchema = Schema({
         required: true,
         unique: true
     },
-    status: Boolean
+    status: Boolean,
+    owner: {
+        type: String,
+        default: 'admin'
+    }
 });
 
 const productsModel = model(productsCollection, productsSchema);
