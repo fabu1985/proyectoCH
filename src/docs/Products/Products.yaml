@@ -1,0 +1,165 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtiene todos los productos disponibles
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Los productos se muestran correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Product'
+        "500":  
+          description: error interno del server, usualmente por query defectuosa. 
+    post:
+      summary: Crea un nuevo Producto
+      tags: 
+        - Products
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/requestBodies/updateProduct"
+      responses: 
+        "201": 
+          description: El producto fue creado correctamente  
+
+  /api/products/{uid}:
+    get:
+      summary: Obtiene un producto a partir de un uid
+      tags: 
+        - Products
+      parameters: 
+        - name: uid
+          in: path
+          required: true
+          description: El id del producto que desea solicitar
+          schema: 
+            type: string
+      responses: 
+        "200":
+          description: El producto fue obtenido correctamente
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Product"
+    put:
+      summary: Actualiza un nuevo Producto
+      tags: 
+        - Products
+      parameters: 
+        - name: uid
+          in: path
+          required: true
+          description: El id del producto que desea solicitar
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/requestBodies/updateProduct"
+      responses: 
+        "201": 
+          description: El producto fue actualizado correctamente  
+    delete:
+      summary: Actualiza datos un producto a partir de un uid
+      tags: 
+        - Products
+      parameters: 
+        - name: uid
+          in: path
+          required: true
+          description: El id del producto que desea solicitar
+          schema: 
+            type: string
+      responses: 
+        "200":
+          description: El producto fue actualizado correctamente
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Product"
+
+components:
+  schemas: 
+    Product: 
+      type: object
+      properties: 
+        _id: 
+          type: string
+          description: Identificador Unico del Producto.
+        title: 
+          type: string
+          description: Nombre del producto.
+        description: 
+          type: string
+          description: Descripcion del producto.
+        price: 
+          type: string
+          description: Precio del producto.
+        stock: 
+          type: string
+          description: Cantidad disponible de productos.
+        category: 
+          type: string
+          description: Categoria del producto.
+        code: 
+          type: string
+          description: Codigo del producto.
+        status: 
+          type: boolean
+          description: disponibilidad del producto [DISPONIBLE/NO DISPONIBLE].
+        owner: 
+          type: string
+          description: Password del producto.
+      example: 
+        title: yogurt
+        description: yogurt natural
+        price: 8.50
+        stock: 3
+        category: lacteos
+        code: 222222
+        status: true
+        owner: Fabu
+  requestBodies: 
+    updateProduct: 
+      type: object
+      properties:  
+        title: 
+          type: string
+          description: Nombre del producto.
+        description: 
+          type: string
+          description: Descripcion del producto.
+        price: 
+          type: string
+          description: Precio del producto.
+        stock: 
+          type: string
+          description: Cantidad disponible de productos.
+        category: 
+          type: string
+          description: Categoria del producto.
+        code: 
+          type: string
+          description: Codigo del producto.
+        status: 
+          type: boolean
+          description: disponibilidad del producto [DISPONIBLE/NO DISPONIBLE].
+        owner: 
+          type: string
+          description: Password del producto.
+      example: 
+        title: yogurt
+        description: yogurt natural
+        price: 8.50
+        stock: 3
+        category: lacteos
+        code: "222222"
+        status: true
+        owner: Fabu

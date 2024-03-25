@@ -14,6 +14,11 @@ const appRouter = require('./routes/index.js');
 const { handleError } = require('./middlewares/error/handleErrors.js');
 const { sumaNumeros } = require('proyectosumafabianadiazposleman');
 const { addLogger, logger } = require('./utils/logger.js');
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUiExpress = require('swagger-ui-express');
+const { StepContextInstance } = require('twilio/lib/rest/studio/v1/flow/engagement/step/stepContext.js');
+
+
 const app = express();
 const PORT = configObject.PORT
 
@@ -37,6 +42,21 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.static(__dirname+'/public'));
 app.use(cookieParser('p@l@br@seCret@'));
 app.use(cors());
+
+const swaggerOptions = {
+  definition: {
+      openapi: '3.0.1',
+      info: {
+          title: 'Documentación de app Adoptame',
+          description: 'Api Docs para Adoptame'
+      }
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`]
+}
+
+const specs = swaggerJSDoc(swaggerOptions)
+
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 initializePassport()
 app.use(passport.initialize())
