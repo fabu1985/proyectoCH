@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "node --watch src/app.js --mode production",
     "dev": "nodemon src/app.js --mode development",
-    "start": "node src/app.js"
+    "start": "node src/app.js",
+    "unitTests": "mocha test/Users.test.js",
+    "superTests": "mocha test/superTest.test.js",
+    "chaiTests": "mocha test/ChaiTest.test.js"
   },
   "keywords": [],
   "author": "",
@@ -44,6 +47,10 @@
     "winston": "^3.12.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "chai": "^4.3.7",
+    "cypress": "^13.7.2",
+    "mocha": "^10.1.0",
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.4"
   }
 }
