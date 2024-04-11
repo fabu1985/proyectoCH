@@ -1,0 +1,135 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Obtiene todos los carritos
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Los carritos se muestran correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Cart'
+        "500":  
+          description: error interno del server, usualmente por query defectuosa. 
+    post:
+      summary: Crea un nuevo Carrito
+      tags: 
+        - Carts
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/requestBodies/updateCart"
+      responses: 
+        "201": 
+          description: El carrito fue creado correctamente  
+
+  /api/carts/{uid}:
+    get:
+      summary: Obtiene un carrito a partir de un uid
+      tags: 
+        - Carts
+      parameters: 
+        - name: uid
+          in: path
+          required: true
+          description: El id del carrito que desea solicitar
+          schema: 
+            type: string
+      responses: 
+        "200":
+          description: El carrito fue obtenido correctamente
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Product"
+    post:
+      summary: Agrega productos a un carrito
+      tags: 
+        - Carts
+      parameters: 
+        - name: uid
+          in: path
+          required: true
+          description: El id del carrito donde desea agregar producto(s)
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/requestBodies/updateCart"
+      responses: 
+        "201": 
+          description: El producto fue agregado al carrito correctamente 
+    put:
+      summary: Actualiza el carrito
+      tags: 
+        - Carts
+      parameters: 
+        - name: uid
+          in: path
+          required: true
+          description: El id del carrito que desea solicitar
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/requestBodies/updateCart"
+      responses: 
+        "201": 
+          description: El carrito fue actualizado correctamente  
+    delete:
+      summary: Actualiza datos un carrito a partir de un uid
+      tags: 
+        - Carts
+      parameters: 
+        - name: uid
+          in: path
+          required: true
+          description: El id del carrito que desea solicitar
+          schema: 
+            type: string
+      responses: 
+        "200":
+          description: El carrito fue actualizado correctamente
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Product"
+
+components:
+  schemas: 
+    Cart: 
+      type: object
+      properties: 
+        _id: 
+          type: string
+          description: Identificador Unico del carrito.
+        product: 
+          type: string
+          description: Nombre del carrito.
+        quantity: 
+          type: string
+          description: Descripcion del carrito.
+      example: 
+        product: yogurt
+        quantity: 2
+  requestBodies: 
+    updateCart: 
+      type: object
+      properties:  
+        product: 
+          type: string
+          description: Nombre del carrito.
+        quantity: 
+          type: string
+          description: Descripcion del carrito.
+      example: 
+        product: yogurt
+        quantity: yogurt natural
