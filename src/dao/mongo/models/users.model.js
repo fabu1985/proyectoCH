@@ -1,4 +1,11 @@
 const {Schema, model} = require('mongoose')
+
+const documentSchema = new Schema({
+    name: { type: String },
+    type: { type: String },
+    reference: { type: String }
+  });
+
 const usersCollection = 'users';
 const usersSchema = Schema({
     first_name: {
@@ -22,7 +29,9 @@ const usersSchema = Schema({
     atCreated: {
         type: Date,
         default: Date()
-    }
+    },
+    lastupdated:{ type: Date,   required: true, default: Date.now()},
+    documents:  { type: [documentSchema] }
 });
 
 const usersModel = model(usersCollection, usersSchema);
