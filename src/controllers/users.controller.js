@@ -108,5 +108,16 @@ class UserController {
       res.sendCatchError(error, "An error occurred in the API request");
     }
   }
+  addDocument = async ( req, res ) => {
+    try {
+      const {uid} = req.params
+      const uploadedFiles = req.files;
+      const resp = await this.service.addDocument(uid, uploadedFiles)
+      res.sendSuccess(resp)
+    } catch (error) {
+      req.logger.error(error);
+      res.sendCatchError(error, "An error occurred in the API request");
+    }
+  }
 }
   module.exports = UserController

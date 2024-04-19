@@ -13,16 +13,18 @@ const cors = require('cors')
 const appRouter = require('./routes/index.js');
 const { handleError } = require('./middlewares/error/handleErrors.js');
 const { sumaNumeros } = require('proyectosumafabianadiazposleman');
-const { addLogger, logger } = require('./utils/logger.js');
-const swaggerJSDoc = require('swagger-jsdoc');
-const swaggerUiExpress = require('swagger-ui-express');
+//const { addLogger, logger } = require('./utils/logger.js');
+// const swaggerJSDoc = require('swagger-jsdoc');
+// const swaggerUiExpress = require('swagger-ui-express');
+const { addLogger } = require('./config/logger.config.js')
+const { logger } = require('./config/logger.config.js')
 const { StepContextInstance } = require('twilio/lib/rest/studio/v1/flow/engagement/step/stepContext.js');
 
 
 const app = express();
 const PORT = configObject.PORT
 
-console.log(sumaNumeros(1,2,3,4,5))
+logger.info(sumaNumeros(1,2,3,4,5))
 app.use(session({
   store: MongoStore.create({
     mongoUrl: 'mongodb+srv://fabianadiazp:FABU1985@cluster0.qn3ysof.mongodb.net/ecommerce?retryWrites=true&w=majority',
@@ -54,9 +56,9 @@ const swaggerOptions = {
   apis: [`${__dirname}/docs/**/*.yaml`]
 }
 
-const specs = swaggerJSDoc(swaggerOptions)
+//const specs = swaggerJSDoc(swaggerOptions)
 
-app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
+// app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 initializePassport()
 app.use(passport.initialize())
